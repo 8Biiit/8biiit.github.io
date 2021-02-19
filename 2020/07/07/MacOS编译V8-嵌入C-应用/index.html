@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header.jpg?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header.jpg?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header.jpg?v=7.3.0">
+  <link rel="mask-icon" href="/images/header.jpg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="下载V8源码参考官方手册 注意：不要直接从v8仓库使用git clone命令下载代码，这样下载下来的代码是无效的，会缺失很多东西，要使用官方提供的工具depot_tools 安装 depot_tools所需的 gn (配置生成工具) 和 nijia (构建工具) 都在这个仓库里。 1234# Clone depot_tools 仓库 $ git clone https://chromium.goo">
+<meta name="keywords" content="MacOS,V8">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MacOS编译V8(嵌入C++应用)">
+<meta property="og:url" content="http://8Biiit.github.io/2020/07/07/MacOS编译V8-嵌入C-应用/index.html">
+<meta property="og:site_name" content="8Biiit&#39;s Blog">
+<meta property="og:description" content="下载V8源码参考官方手册 注意：不要直接从v8仓库使用git clone命令下载代码，这样下载下来的代码是无效的，会缺失很多东西，要使用官方提供的工具depot_tools 安装 depot_tools所需的 gn (配置生成工具) 和 nijia (构建工具) 都在这个仓库里。 1234# Clone depot_tools 仓库 $ git clone https://chromium.goo">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-07-07T13:05:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MacOS编译V8(嵌入C++应用)">
+<meta name="twitter:description" content="下载V8源码参考官方手册 注意：不要直接从v8仓库使用git clone命令下载代码，这样下载下来的代码是无效的，会缺失很多东西，要使用官方提供的工具depot_tools 安装 depot_tools所需的 gn (配置生成工具) 和 nijia (构建工具) 都在这个仓库里。 1234# Clone depot_tools 仓库 $ git clone https://chromium.goo">
+  <link rel="canonical" href="http://8Biiit.github.io/2020/07/07/MacOS编译V8-嵌入C-应用/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>MacOS编译V8(嵌入C++应用) | 8Biiit's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">8Biiit's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">每天都在进步啊</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://8Biiit.github.io/2020/07/07/MacOS编译V8-嵌入C-应用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="8Biiit">
+      <meta itemprop="description" content="Everything from life">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="8Biiit's Blog">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">MacOS编译V8(嵌入C++应用)
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-07 20:55:02 / 修改时间：21:05:28" itemprop="dateCreated datePublished" datetime="2020-07-07T20:55:02+08:00">2020-07-07</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MacOS/" itemprop="url" rel="index"><span itemprop="name">MacOS</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="下载V8源码"><a href="#下载V8源码" class="headerlink" title="下载V8源码"></a>下载V8源码</h1><p>参考<a href="https://v8.dev/docs/source-code" target="_blank" rel="noopener">官方手册</a></p>
+<p>注意：不要直接从v8仓库使用git clone命令下载代码，这样下载下来的代码是无效的，会缺失很多东西，要使用官方提供的工具depot_tools</p>
+<h2 id="安装-depot-tools"><a href="#安装-depot-tools" class="headerlink" title="安装 depot_tools"></a>安装 depot_tools</h2><p>所需的 gn (配置生成工具) 和 nijia (构建工具) 都在这个仓库里。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Clone depot_tools 仓库 </span><br><span class="line">$ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git</span><br><span class="line"># 导出环境变量</span><br><span class="line">$ export PATH=&quot;$PATH:/path/to/depot_tools&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载所需依赖"><a href="#下载所需依赖" class="headerlink" title="下载所需依赖"></a>下载所需依赖</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir v8 &amp;&amp; cd v8</span><br><span class="line"># 配置 v8 仓库</span><br><span class="line">$ gclient config https://chromium.googlesource.com/v8/v8</span><br><span class="line"># 需要科学上网，然后等待很长一段时间...</span><br><span class="line">$ gclient sync</span><br><span class="line">​</span><br></pre></td></tr></table></figure>
+
+<p>结束后会发现有v8库文件的文件夹</p>
+<h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>参考<a href="https://v8.dev/docs/build-gn" target="_blank" rel="noopener">官方手册</a></p>
+<h2 id="方式一：gm脚本"><a href="#方式一：gm脚本" class="headerlink" title="方式一：gm脚本"></a>方式一：gm脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#配置别名：</span><br><span class="line">$ alias gm=/path/to/v8/tools/dev/gm.py</span><br><span class="line">$ gm x64.release</span><br><span class="line">$ gm x64.release.check</span><br></pre></td></tr></table></figure>
+
+<h2 id="方式二：手动编译"><a href="#方式二：手动编译" class="headerlink" title="方式二：手动编译"></a>方式二：手动编译</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#生成ninja文件</span><br><span class="line">$ gn args out/foo</span><br><span class="line">或指定参数</span><br><span class="line">$ gn gen out/foo --args=&apos;is_debug=false target_cpu=&quot;x64&quot; v8_target_cpu=&quot;arm64&quot; use_goma=true&apos;</span><br><span class="line">​</span><br><span class="line">#或使用v8gen脚本</span><br><span class="line">#配置别名：</span><br><span class="line">$ alias v8gen=/path/to/v8/tools/dev/v8gen.py</span><br><span class="line">$ v8gen -b &apos;V8 Linux64 - debug builder&apos; -m client.v8 foo</span><br><span class="line">或：</span><br><span class="line">$ v8gen foo</span><br><span class="line">​</span><br><span class="line">$ v8gen x64.release.sample</span><br><span class="line">​</span><br><span class="line">#使用ninja来编译：</span><br><span class="line">$ ninja -C out/foo</span><br><span class="line">如果要在c++中嵌入v8，使用下面的</span><br><span class="line">$ ninja -C out.gn/x64.release.sample v8_monolith</span><br><span class="line">​</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改mini-SDK"><a href="#修改mini-SDK" class="headerlink" title="修改mini-SDK"></a>修改mini-SDK</h2><p>由于对要求 MAC OSX SDK&gt;10.15，而我的xcode带的是10.12。所以需要修改</p>
+<p>查看sdk版本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Xcode中添加的SDK版本</span><br><span class="line">$xcodebuild -showsdks</span><br></pre></td></tr></table></figure>
+
+<p>修改v8/build/config/mac/mac_sdk_overrides.gni文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">_sdk_min_from_env = getenv(&quot;FORCE_MAC_SDK_MIN&quot;)</span><br><span class="line">declare_args() &#123;</span><br><span class="line">  # Minimum supported version of the Mac SDK.</span><br><span class="line">  if (_sdk_min_from_env == &quot;&quot;) &#123;</span><br><span class="line">    mac_sdk_min = &quot;10.15&quot; # 将这里修改成了10.12</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    mac_sdk_min = _sdk_min_from_env</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="替换libtool"><a href="#替换libtool" class="headerlink" title="替换libtool"></a>替换libtool</h2><p>这里我编译出错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[48/1364] LIBTOOL-STATIC obj/libv8_libbase.a</span><br><span class="line">FAILED: obj/libv8_libbase.a</span><br><span class="line">rm -f obj/libv8_libbase.a &amp;&amp; TOOL_VERSION=1594099062 python ../../build/toolchain/mac/filter_libtool.py /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -D  -o obj/libv8_libbase.a -filelist obj/libv8_libbase.a.rsp</span><br><span class="line">error: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: unknown option character `D&apos; in: -D</span><br><span class="line">Usage: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static [-] file [...] [-filelist listfile[,dirname]] [-arch_only arch] [-sacLT] [-no_warning_for_no_symbols]</span><br></pre></td></tr></table></figure>
+
+<p>看样子是xcode的libtool工具出错，将新版本xcode(11.5)里带的libtool拷贝到原来的xcode 的/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool目录下</p>
+<p>成功解决问题</p>
+<h2 id="移除i18n"><a href="#移除i18n" class="headerlink" title="移除i18n"></a>移除i18n</h2><p>遇到报错<code>FAILED: obj/v8_base_without_compiler/js-number-format.o</code></p>
+<p>icu67 移除了 getAllFieldPositions 这个 API，需要后续添加一个 icu67.1 的 patch<br>因为用不到国际化的模块，将 i18n 从编译选项中移除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 编辑配置</span><br><span class="line">$ gn args out.gn/x64.release.sample</span><br><span class="line"># 增加一行：</span><br><span class="line"># v8_enable_i18n_support = false</span><br><span class="line"># 再次构建</span><br><span class="line">$ ninja -C out.gn/x64.release.sample v8_monolith</span><br></pre></td></tr></table></figure>
+
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>编译一下 samples/hello-world.cc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ g++ samples/hello-world.cc -o hello-world \</span><br><span class="line">-I. -I./include \</span><br><span class="line">-L./out.gn/x64.release.sample/obj -lv8_monolith \</span><br><span class="line">-std=c++11</span><br></pre></td></tr></table></figure>
+
+<p>执行一下，如果有如下输出就是编译成功了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ./hello-world</span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">Hello, World!</span><br><span class="line">3 + 4 = 7</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>哥哥姐姐打发点咯~</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="8Biiit 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="8Biiit 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/MacOS/" rel="tag"># MacOS</a>
+            
+              <a href="/tags/V8/" rel="tag"># V8</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/05/29/小米6刷Magisk全流程/" rel="next" title="小米6刷Magisk全流程">
+                  <i class="fa fa-chevron-left"></i> 小米6刷Magisk全流程
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2021/01/19/Mac下使用Charles进行HTTP-HTTPS抓包/" rel="prev" title="Mac下使用Charles进行HTTP/HTTPS抓包">
+                  Mac下使用Charles进行HTTP/HTTPS抓包 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/header.jpg"
+      alt="8Biiit">
+  <p class="site-author-name" itemprop="name">8Biiit</p>
+  <div class="site-description motion-element" itemprop="description">Everything from life</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/8biiit" title="GitHub &rarr; https://github.com/8biiit" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/3478929130" title="Weibo &rarr; https://weibo.com/u/3478929130" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#下载V8源码"><span class="nav-number">1.</span> <span class="nav-text">下载V8源码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-depot-tools"><span class="nav-number">1.1.</span> <span class="nav-text">安装 depot_tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载所需依赖"><span class="nav-number">1.2.</span> <span class="nav-text">下载所需依赖</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译"><span class="nav-number">2.</span> <span class="nav-text">编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方式一：gm脚本"><span class="nav-number">2.1.</span> <span class="nav-text">方式一：gm脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方式二：手动编译"><span class="nav-number">2.2.</span> <span class="nav-text">方式二：手动编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改mini-SDK"><span class="nav-number">2.3.</span> <span class="nav-text">修改mini-SDK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#替换libtool"><span class="nav-number">2.4.</span> <span class="nav-text">替换libtool</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移除i18n"><span class="nav-number">2.5.</span> <span class="nav-text">移除i18n</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">8Biiit</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+    var gitalk = new Gitalk({
+      clientID: '8c5e1f409f422d4e10f6',
+      clientSecret: 'dd74067b3e311d6338eb117e3711361d6769df41',
+      repo: '8biiit.github.io',
+      owner: '8biiit',
+      admin: ['8biiit'],
+      id: 'adbaea098b4f87fe17f4e3855ec3131f',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header.jpg?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header.jpg?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header.jpg?v=7.3.0">
+  <link rel="mask-icon" href="/images/header.jpg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="传输数据指令CPSR状态寄存器：  .tg  {border-collapse:collapse;border-spacing:0;} .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:">
+<meta name="keywords" content="汇编,逆向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Arm指令">
+<meta property="og:url" content="http://8Biiit.github.io/2019/09/04/Arm指令/index.html">
+<meta property="og:site_name" content="8Biiit&#39;s Blog">
+<meta property="og:description" content="传输数据指令CPSR状态寄存器：  .tg  {border-collapse:collapse;border-spacing:0;} .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-04T03:22:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Arm指令">
+<meta name="twitter:description" content="传输数据指令CPSR状态寄存器：  .tg  {border-collapse:collapse;border-spacing:0;} .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:">
+  <link rel="canonical" href="http://8Biiit.github.io/2019/09/04/Arm指令/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Arm指令 | 8Biiit's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">8Biiit's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">每天都在进步啊</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://8Biiit.github.io/2019/09/04/Arm指令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="8Biiit">
+      <meta itemprop="description" content="Everything from life">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="8Biiit's Blog">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">Arm指令
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-04 10:51:51 / 修改时间：11:22:17" itemprop="dateCreated datePublished" datetime="2019-09-04T10:51:51+08:00">2019-09-04</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/汇编/" itemprop="url" rel="index"><span itemprop="name">汇编</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="传输数据指令"><a href="#传输数据指令" class="headerlink" title="传输数据指令"></a>传输数据指令</h1><p>CPSR状态寄存器：</p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
+</style>
+<table class="tg" style="undefined;table-layout: fixed; width: 622px">
+<colgroup>
+<col style="width: 78px">
+<col style="width: 40px">
+<col style="width: 46px">
+<col style="width: 67px">
+<col style="width: 27px">
+<col style="width: 27px">
+<col style="width: 27px">
+<col style="width: 40px">
+<col style="width: 36px">
+<col style="width: 35px">
+<col style="width: 44px">
+<col style="width: 31px">
+<col style="width: 31px">
+<col style="width: 31px">
+<col style="width: 31px">
+<col style="width: 31px">
+</colgroup>
+  <tr>
+    <th class="tg-c3ow" colspan="4">条件码标志</th>
+    <th class="tg-baqh" colspan="4">保留</th>
+    <th class="tg-baqh" colspan="8">控制位</th>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">31</td>
+    <td class="tg-c3ow">30</td>
+    <td class="tg-c3ow">29</td>
+    <td class="tg-baqh">28</td>
+    <td class="tg-baqh">27</td>
+    <td class="tg-baqh">26</td>
+    <td class="tg-baqh">25</td>
+    <td class="tg-baqh">24-8</td>
+    <td class="tg-baqh">7</td>
+    <td class="tg-baqh">6</td>
+    <td class="tg-baqh">5</td>
+    <td class="tg-baqh">4</td>
+    <td class="tg-baqh">3</td>
+    <td class="tg-baqh">2</td>
+    <td class="tg-baqh">1</td>
+    <td class="tg-baqh">0</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">N</td>
+    <td class="tg-c3ow">Z</td>
+    <td class="tg-c3ow">C</td>
+    <td class="tg-baqh">V</td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh">I</td>
+    <td class="tg-baqh">F</td>
+    <td class="tg-baqh">T</td>
+    <td class="tg-baqh">M4</td>
+    <td class="tg-baqh">M3</td>
+    <td class="tg-baqh">M2</td>
+    <td class="tg-baqh">M1</td>
+    <td class="tg-baqh">M0</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">Less than</td>
+    <td class="tg-c3ow">Zero</td>
+    <td class="tg-c3ow">Carry</td>
+    <td class="tg-baqh">Overflow</td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh"></td>
+    <td class="tg-baqh">IRQ</td>
+    <td class="tg-baqh">FIQ</td>
+    <td class="tg-baqh">State</td>
+    <td class="tg-baqh" colspan="5">Mode bits</td>
+  </tr>
+</table>
+数据处理指令语法
+
+<p><code>&lt;操作{&lt;cond&gt;}{S}&gt;  &lt;Rd&gt;, &lt;Rn&gt;, &lt;Operand2&gt;</code></p>
+<p>&lt;操作码&gt; &lt;目标寄存器Rd&gt; &lt;第一操作寄存器Rn&gt; &lt;第二操作数Operand2&gt;</p>
+<p>第一个位置必须是寄存器，第二操作数可以是寄存器，也可以是立即数</p>
+<h2 id="数据传送指令-MOV-MVN"><a href="#数据传送指令-MOV-MVN" class="headerlink" title="数据传送指令 MOV,MVN"></a>数据传送指令 MOV,MVN</h2><p>指令的几种形式：</p>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+.tg .tg-0lax{text-align:left;vertical-align:top}
+</style>
+<table class="tg" style="undefined;table-layout: fixed; width: 464px">
+<colgroup>
+<col style="width: 171px">
+<col style="width: 104px">
+<col style="width: 189px">
+</colgroup>
+  <tr>
+    <th class="tg-0pky" colspan="3">从另一个寄存器、被移位的寄存器或将一个立即数加载到目的寄存器</th>
+  </tr>
+  <tr>
+    <td class="tg-0pky">mov 寄存器、 立即数</td>
+    <td class="tg-0pky">mov r0,#0x1</td>
+    <td class="tg-0pky">r0 = 0x1</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">mov 寄存器、 寄存器</td>
+    <td class="tg-0pky">mov r2, r1</td>
+    <td class="tg-0pky">r2 = r1</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky" colspan="3">取反后再传值,比MOV多了一步取反</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">mov 寄存器、 立即数</td>
+    <td class="tg-0lax">mvn r0,#0x1</td>
+    <td class="tg-0lax">r0 = ~0x1</td>
+  </tr>
+  <tr>
+    <td class="tg-0lax">mov 寄存器、 寄存器</td>
+    <td class="tg-0lax">mvn r2, r1</td>
+    <td class="tg-0lax">r2 = ~r1</td>
+  </tr>
+</table>
+
+<p>movx 其中 x 可以是下面的字符:</p>
+<p>l用于32位的长字值<br>w用于16位的字值   把 16 位立即数放到寄存器的低16位，高16位清0</p>
+<p>t用于16位的字值     把 16 位立即数放到寄存器的高16位，低 16位不影响<br>b用于8位的字节值</p>
+<h2 id="算术运算指令-ADD-ADC-SUB-SBC-MUL"><a href="#算术运算指令-ADD-ADC-SUB-SBC-MUL" class="headerlink" title="算术运算指令 ADD/ADC , SUB/SBC , MUL"></a>算术运算指令 ADD/ADC , SUB/SBC , MUL</h2><h3 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">;ADD加法指令</span><br><span class="line">mov r0, #1</span><br><span class="line">mov r1, #1</span><br><span class="line">add r2, r1, r0　　;r2 = r1 + r0</span><br><span class="line">add r2, r1, #2　　;r2 = r1 + 2</span><br><span class="line">;ADC带进位加法指令,即除了加两个数以外,还要把CPSR的C值也要带进来</span><br><span class="line">ADDS R0,R1,R2; R0=R1+R2,ADDS中S表示把进位结果写入CPSR</span><br><span class="line">ADC R5,R3,R4 ;R5=R3+R4+C</span><br></pre></td></tr></table></figure>
+
+<h3 id="SUB"><a href="#SUB" class="headerlink" title="SUB"></a>SUB</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">;SUB减法指令</span><br><span class="line">mov r0, #5</span><br><span class="line">mov r1, #3</span><br><span class="line">sub r2, r0, r1　　;r2 = r0 - r1</span><br><span class="line">sub r2, r1, #2　　;r2 = r1 - 2</span><br><span class="line">;SBC带进位减法指令,即除了加两个数以外,还要把CPSR的C值也要带进来,类似ADC</span><br><span class="line">SUBS R0,R1,R2; R0=R1-R2,SUBS中S表示把进位结果写入CPSR</span><br><span class="line">SBC R5,R3,R4 ;R5=R3-R4-C</span><br></pre></td></tr></table></figure>
+
+<h3 id="MUL"><a href="#MUL" class="headerlink" title="MUL"></a>MUL</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">;MUL 乘法指令</span><br><span class="line">MUL R0,R1,R2; R0=R1*R2</span><br><span class="line">MUL R0,R1,#3 ;R0=R1*3</span><br></pre></td></tr></table></figure>
+
+<h2 id="位操作指令-AND-ORR-TST-BIC"><a href="#位操作指令-AND-ORR-TST-BIC" class="headerlink" title="位操作指令 AND,ORR, TST,BIC"></a>位操作指令 AND,ORR, TST,BIC</h2><h3 id="AND-与操作"><a href="#AND-与操作" class="headerlink" title="AND 与操作"></a>AND 与操作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AND R0,R1,R2; R0=R1 &amp; R2</span><br><span class="line">AND R0,R1,#0xFF ;R0=R1 &amp; 0xFF</span><br></pre></td></tr></table></figure>
+
+<h3 id="ORR-或操作"><a href="#ORR-或操作" class="headerlink" title="ORR 或操作"></a>ORR 或操作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ORR R0,R1,R2; R0=R1 | R2</span><br><span class="line">ORR R0,R1,#0xFF ;R0=R1 | 0xFF</span><br></pre></td></tr></table></figure>
+
+<h3 id="TST-测试某一位是否为1-并把结果写入CPSR-供下一句使用"><a href="#TST-测试某一位是否为1-并把结果写入CPSR-供下一句使用" class="headerlink" title="TST 测试某一位是否为1,并把结果写入CPSR,供下一句使用"></a>TST 测试某一位是否为1,并把结果写入CPSR,供下一句使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TST R1,#0xffe;   等同于if(R1 &amp; 0xffe)</span><br><span class="line">TST R1,#%1;测试最低位是否为1,%表示二进制</span><br></pre></td></tr></table></figure>
+
+<h3 id="BIC-清位操作"><a href="#BIC-清位操作" class="headerlink" title="BIC 清位操作"></a>BIC 清位操作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BIC   R0，R0，＃0xF          ； 等同于 R0 &amp;=~(0xF)</span><br><span class="line">BIC   R0，R0，＃％1011   ； 该指令清除 R0 中的位 0 1  3，其余的位保持;   %表示是二进制,0x表示十六进制</span><br></pre></td></tr></table></figure>
+
+<h1 id="cmp指令"><a href="#cmp指令" class="headerlink" title="cmp指令"></a>cmp指令</h1><p>cmp是比较指令,cmp的功能相当于减法指令。它不保存结果，只是影响相应的标志位。其他的指令通过识别这些被影响的标志位来得知比较结果。</p>
+<p>cmp指令格式:   cmp 操作对象1, 操作对象2</p>
+<p>不同大小数进行cmp指令时的结果：</p>
+<ol>
+<li><p>cmp eax, eax (两数相等)</p>
+</li>
+<li><p>cmp  eax, ebx (eax - ebx = 03h)  </p>
+</li>
+<li><p>cmp  al, bl (al - bl = -03h)  </p>
+</li>
+</ol>
+<p>我们怎么判断大小呢？若执行指令后</p>
+<p>（1）ZF</p>
+<p>  ZF=1 ，则说明两个数相等，因为zero为1说明结果为0。</p>
+<p>（2）CF</p>
+<p>当无符号时：</p>
+<p>CF=1 则说明了有进位或借位，cmp是进行的减操作，故可以看出为借位，所以，此时oprd1 &lt; oprd2</p>
+<p>CF=0 则说明了无借位，但此时要注意ZF是否为0，若为0，则说明结果不为0，故此时oprd1&gt;oprd2</p>
+<p>当有符号时：</p>
+<p>若SF=0，OF=0 则说明了此时的值为正数，没有溢出，可以直观的看出，oprd1&gt;oprd2</p>
+<p>若SF=1，OF=0 则说明了此时的值为负数，没有溢出，则为oprd1 &lt; oprd2</p>
+<p>若SF=0，OF=1 则说明了此时的值为正数，有溢出，可以看出oprd1 &lt; oprd2</p>
+<p>若SF=1，OF=1则说明了此时的值为负数，有溢出，可以看出oprd1 &gt; oprd2</p>
+<h1 id="beq-amp-bnq"><a href="#beq-amp-bnq" class="headerlink" title="beq &amp; bnq"></a>beq &amp; bnq</h1><h2 id="beq指令"><a href="#beq指令" class="headerlink" title="beq指令"></a>beq指令</h2><p>beq指令格式:   beq  地址</p>
+<p>若标志位ZF为1，则跳转；若为0，则不跳转 （若前面有cmp指令，则意味着相等跳转，不等执行下一步）</p>
+<h2 id="bnq指令"><a href="#bnq指令" class="headerlink" title="bnq指令"></a>bnq指令</h2><p>bnq指令格式:   bnq  地址</p>
+<p>若标志位ZF为0，则跳转；若为1，则不跳转 （若前面有cmp指令，则意味着不等跳转，相等执行下一步）</p>
+<h1 id="寄存器入栈及出栈指令-POP-PUSH"><a href="#寄存器入栈及出栈指令-POP-PUSH" class="headerlink" title="寄存器入栈及出栈指令 POP PUSH"></a>寄存器入栈及出栈指令 POP PUSH</h1><p>实现低寄存器、可选的 LR 寄存器入栈寄存器、可选的 PC寄存器出栈操作，堆栈地址由 SP 寄存设置,堆栈是满递减堆栈.</p>
+<p>指令格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PUSH &#123;reglist[,LR]&#125;               reglist 入栈/出栈低寄存器列表,即 R0~R7        LR 入栈时的可选寄存器</span><br><span class="line">POP &#123;reglist[,PC]&#125;                 PC 出栈时的可选寄存器</span><br></pre></td></tr></table></figure>
+
+<h1 id="STR指令"><a href="#STR指令" class="headerlink" title="STR指令"></a>STR指令</h1><p>STR指令用于从源寄存器中将一个32位的字数据传送到存储器中。</p>
+<p>指令格式： STR{条件} 源寄存器，&lt;存储器地址&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">STR R0，[R1]，＃8             ；将R0中的字数据写入以R1为地址的存储器中，并将新地址R1＋8写入R1。</span><br><span class="line">STR R0，[R1，＃8]             ；将R0中的字数据写入以R1＋8为地址的存储器中。”</span><br><span class="line">str     r1, [r0]                       ；将r1寄存器的值，传送到地址值为r0的（存储器）内存中</span><br></pre></td></tr></table></figure>
+
+<h1 id="条件指令"><a href="#条件指令" class="headerlink" title="条件指令"></a>条件指令</h1><p><a href="https://www.anquanke.com/post/id/86422" target="_blank" rel="noopener">https://www.anquanke.com/post/id/86422</a></p>
+<h1 id="特殊的跟0的比较跳转指令"><a href="#特殊的跟0的比较跳转指令" class="headerlink" title="特殊的跟0的比较跳转指令"></a>特殊的跟0的比较跳转指令</h1><p>大于等于0（BGEZ），大于0（BGTZ），小于等于0（BLEZ），还有小于0（BLTZ）</p>
+<h1 id="分支指令将一个寄存器的值跟0比较"><a href="#分支指令将一个寄存器的值跟0比较" class="headerlink" title="分支指令将一个寄存器的值跟0比较"></a>分支指令将一个寄存器的值跟0比较</h1><p>BEQ,BGE,BGT,BLE,BLT,BNE</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>哥哥姐姐打发点咯~</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="8Biiit 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="8Biiit 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/汇编/" rel="tag"># 汇编</a>
+            
+              <a href="/tags/逆向/" rel="tag"># 逆向</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/08/21/解决mac上使用VirtualBox建立mac虚拟机分辨率问题/" rel="next" title="解决mac上使用VirtualBox建立mac虚拟机分辨率问题">
+                  <i class="fa fa-chevron-left"></i> 解决mac上使用VirtualBox建立mac虚拟机分辨率问题
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/12/Hook技术的原理和实现/" rel="prev" title="Hook技术的原理和实现">
+                  Hook技术的原理和实现 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/header.jpg"
+      alt="8Biiit">
+  <p class="site-author-name" itemprop="name">8Biiit</p>
+  <div class="site-description motion-element" itemprop="description">Everything from life</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/8biiit" title="GitHub &rarr; https://github.com/8biiit" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/3478929130" title="Weibo &rarr; https://weibo.com/u/3478929130" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#传输数据指令"><span class="nav-number">1.</span> <span class="nav-text">传输数据指令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据传送指令-MOV-MVN"><span class="nav-number">1.1.</span> <span class="nav-text">数据传送指令 MOV,MVN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算术运算指令-ADD-ADC-SUB-SBC-MUL"><span class="nav-number">1.2.</span> <span class="nav-text">算术运算指令 ADD/ADC , SUB/SBC , MUL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ADD"><span class="nav-number">1.2.1.</span> <span class="nav-text">ADD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SUB"><span class="nav-number">1.2.2.</span> <span class="nav-text">SUB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MUL"><span class="nav-number">1.2.3.</span> <span class="nav-text">MUL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#位操作指令-AND-ORR-TST-BIC"><span class="nav-number">1.3.</span> <span class="nav-text">位操作指令 AND,ORR, TST,BIC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AND-与操作"><span class="nav-number">1.3.1.</span> <span class="nav-text">AND 与操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ORR-或操作"><span class="nav-number">1.3.2.</span> <span class="nav-text">ORR 或操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TST-测试某一位是否为1-并把结果写入CPSR-供下一句使用"><span class="nav-number">1.3.3.</span> <span class="nav-text">TST 测试某一位是否为1,并把结果写入CPSR,供下一句使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BIC-清位操作"><span class="nav-number">1.3.4.</span> <span class="nav-text">BIC 清位操作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cmp指令"><span class="nav-number">2.</span> <span class="nav-text">cmp指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#beq-amp-bnq"><span class="nav-number">3.</span> <span class="nav-text">beq &amp; bnq</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#beq指令"><span class="nav-number">3.1.</span> <span class="nav-text">beq指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bnq指令"><span class="nav-number">3.2.</span> <span class="nav-text">bnq指令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#寄存器入栈及出栈指令-POP-PUSH"><span class="nav-number">4.</span> <span class="nav-text">寄存器入栈及出栈指令 POP PUSH</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#STR指令"><span class="nav-number">5.</span> <span class="nav-text">STR指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#条件指令"><span class="nav-number">6.</span> <span class="nav-text">条件指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特殊的跟0的比较跳转指令"><span class="nav-number">7.</span> <span class="nav-text">特殊的跟0的比较跳转指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分支指令将一个寄存器的值跟0比较"><span class="nav-number">8.</span> <span class="nav-text">分支指令将一个寄存器的值跟0比较</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">8Biiit</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+    var gitalk = new Gitalk({
+      clientID: '8c5e1f409f422d4e10f6',
+      clientSecret: 'dd74067b3e311d6338eb117e3711361d6769df41',
+      repo: '8biiit.github.io',
+      owner: '8biiit',
+      admin: ['8biiit'],
+      id: '3916560debe35aabc5afeff6d369a31f',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>

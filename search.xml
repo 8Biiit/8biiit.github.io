@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[Mac下使用Charles进行HTTP/HTTPS抓包]]></title>
+    <url>%2F2021%2F01%2F19%2FMac%E4%B8%8B%E4%BD%BF%E7%94%A8Charles%E8%BF%9B%E8%A1%8CHTTP-HTTPS%E6%8A%93%E5%8C%85%2F</url>
+    <content type="text"><![CDATA[Charles安装与配置下载最新的Charles工具，下载地址：https://www.charlesproxy.com/download/ 配置代理端口号Proxy -&gt; Proxy Settings -&gt; Port，port可以随便指定，这里取8888 配置HTTPS证书添加SSL ProxyingProxy -&gt; SSL Proxying Settings -&gt;勾选“Enable SSL Proxying”，并点击下方的Add，可以这样配置： 安装Charles证书到MacHelp–&gt;SSL Proxying→Install Charles Root Certificate 此时会启动“钥匙串访问”APP，搜索框搜所刚安装好的证书，证书名字：Charles Proxy CA。 选中该证书，点击显示简介 更改证书信任权限。更改为始终信任，并关闭窗口输入密码保存 移动复制该证书到“系统”里面 结束！可以抓包了 Android 设置Android代理设置以小米+lineageOS为例 设置 -&gt; WI-FI -&gt; 网络详情 -&gt; 编辑 配置代理，IP设为电脑的IP，端口输入之前设置的端口（此为8888），点击存储 （mac 查看ip：ifconfig en0 ） Android 7.0 以下设置打开Safari浏览器，访问：chls.pro/ssl 手机会提示下载文件，点击安装 Android 7.0 以上设置Android 7.0及以上为何不能抓取到Https请求的明文数据？ 其实Charles上显示确实抓到了包，但是当我们看抓包的详细数据时会发现报错: “You may need to configure your browser or application to trust the Charles Root Certificate. See SSL Proxying in the Help menu”。 Charles说手机端没有信任Charles的根证书，但是我们手机上已经安装了Charles根证书了，为什么会这样？ 原来在Android 7.0(API 24 ) ，有一个名为“Network Security Configuration”的新安全功能。这个新功能的目标是允许开发人员在不修改应用程序代码的情况下自定义他们的网络安全设置。如果应用程序运行的系统版本高于或等于24，并且targetSdkVersion&gt;=24，则只有系统(system)证书才会被信任。所以用户(user)导入的Charles根证书是不被信任的。 方法一：将证书提升为系统证书参考：android 7.0以上charles https抓包 将手机进行Root 将下载的pem证书文件传到到电脑上，并执行以下命令得到证书的md5值 openssl x509 -subject_hash_old -in &lt;file_name&gt; 第一行： 即为md5值。 将charles-proxy-ssl-proxying-certificate.pem重命名为:&lt;8位md值&gt;.&lt;0&gt;，这里的md5值为上一步得到的。 Android系统根目录下的证书名字格式如下：&lt;8位md值&gt;.&lt;0&gt; 将上面步骤产生证书push到手机目录：/system/etc/security/cacerts push中如果遇到错误 例如remount of the / superblock failed: Permission denied或者file only read等。 解决办法: 1234$ adb root$ adb disable-verity$ adb reboot$ adb root 在 设置-&gt;安全-&gt;加密与凭据-&gt;信任的凭据 的系统标签页看到你新加入的证书，将其启用即可顺利抓包 按照系统证书的方法，遇到问题：read-only file system android 尝试adb root ，报错 adbd cannot run as root in production builds 安装adbd Insecure 依然不行 方法二：利用VirtualXposed参考：Android 7.0+使用VirtualXposed+Charles进行抓包 注意，0.18.2以后的VirtualXposed 不支持32位app iOS 设置iPhone代理设置设置→WIFI –&gt;点击Wi-Fi旁边的ⓘ 滑到底部，点击配置代理 配置代理，IP设为电脑的IP，端口输入之前设置的端口（此为8888），点击存储 （mac 查看ip：ifconfig en0 ） iPhone证书安装打开Safari浏览器，访问：chls.pro/ssl，此时电脑上连接提示，点击allow允许 手机会提示下载描述文件，点击允许 安装完成后，点击 设置–&gt;通用→关于本机，下拉到底部，点击证书 信任设置，把刚信任开关打开。]]></content>
+      <categories>
+        <category>Web</category>
+      </categories>
+      <tags>
+        <tag>Web</tag>
+        <tag>Mac</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[MacOS编译V8(嵌入C++应用)]]></title>
+    <url>%2F2020%2F07%2F07%2FMacOS%E7%BC%96%E8%AF%91V8-%E5%B5%8C%E5%85%A5C-%E5%BA%94%E7%94%A8%2F</url>
+    <content type="text"><![CDATA[下载V8源码参考官方手册 注意：不要直接从v8仓库使用git clone命令下载代码，这样下载下来的代码是无效的，会缺失很多东西，要使用官方提供的工具depot_tools 安装 depot_tools所需的 gn (配置生成工具) 和 nijia (构建工具) 都在这个仓库里。 1234# Clone depot_tools 仓库 $ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git# 导出环境变量$ export PATH=&quot;$PATH:/path/to/depot_tools&quot; 下载所需依赖123456mkdir v8 &amp;&amp; cd v8# 配置 v8 仓库$ gclient config https://chromium.googlesource.com/v8/v8# 需要科学上网，然后等待很长一段时间...$ gclient sync​ 结束后会发现有v8库文件的文件夹 编译参考官方手册 方式一：gm脚本1234#配置别名：$ alias gm=/path/to/v8/tools/dev/gm.py$ gm x64.release$ gm x64.release.check 方式二：手动编译12345678910111213141516171819#生成ninja文件$ gn args out/foo或指定参数$ gn gen out/foo --args=&apos;is_debug=false target_cpu=&quot;x64&quot; v8_target_cpu=&quot;arm64&quot; use_goma=true&apos;​#或使用v8gen脚本#配置别名：$ alias v8gen=/path/to/v8/tools/dev/v8gen.py$ v8gen -b &apos;V8 Linux64 - debug builder&apos; -m client.v8 foo或：$ v8gen foo​$ v8gen x64.release.sample​#使用ninja来编译：$ ninja -C out/foo如果要在c++中嵌入v8，使用下面的$ ninja -C out.gn/x64.release.sample v8_monolith​ 修改mini-SDK由于对要求 MAC OSX SDK&gt;10.15，而我的xcode带的是10.12。所以需要修改 查看sdk版本： 12# Xcode中添加的SDK版本$xcodebuild -showsdks 修改v8/build/config/mac/mac_sdk_overrides.gni文件： 123456789_sdk_min_from_env = getenv(&quot;FORCE_MAC_SDK_MIN&quot;)declare_args() &#123; # Minimum supported version of the Mac SDK. if (_sdk_min_from_env == &quot;&quot;) &#123; mac_sdk_min = &quot;10.15&quot; # 将这里修改成了10.12 &#125; else &#123; mac_sdk_min = _sdk_min_from_env &#125;&#125; 替换libtool这里我编译出错 12345[48/1364] LIBTOOL-STATIC obj/libv8_libbase.aFAILED: obj/libv8_libbase.arm -f obj/libv8_libbase.a &amp;&amp; TOOL_VERSION=1594099062 python ../../build/toolchain/mac/filter_libtool.py /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -D -o obj/libv8_libbase.a -filelist obj/libv8_libbase.a.rsperror: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool: unknown option character `D&apos; in: -DUsage: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static [-] file [...] [-filelist listfile[,dirname]] [-arch_only arch] [-sacLT] [-no_warning_for_no_symbols] 看样子是xcode的libtool工具出错，将新版本xcode(11.5)里带的libtool拷贝到原来的xcode 的/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool目录下 成功解决问题 移除i18n遇到报错FAILED: obj/v8_base_without_compiler/js-number-format.o icu67 移除了 getAllFieldPositions 这个 API，需要后续添加一个 icu67.1 的 patch因为用不到国际化的模块，将 i18n 从编译选项中移除 123456# 编辑配置$ gn args out.gn/x64.release.sample# 增加一行：# v8_enable_i18n_support = false# 再次构建$ ninja -C out.gn/x64.release.sample v8_monolith 测试编译一下 samples/hello-world.cc 1234$ g++ samples/hello-world.cc -o hello-world \-I. -I./include \-L./out.gn/x64.release.sample/obj -lv8_monolith \-std=c++11 执行一下，如果有如下输出就是编译成功了 1234$ ./hello-world&apos;&apos;&apos;Hello, World!3 + 4 = 7]]></content>
+      <categories>
+        <category>MacOS</category>
+      </categories>
+      <tags>
+        <tag>MacOS</tag>
+        <tag>V8</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[小米6刷Magisk全流程]]></title>
+    <url>%2F2020%2F05%2F29%2F%E5%B0%8F%E7%B1%B36%E5%88%B7Magisk%E5%85%A8%E6%B5%81%E7%A8%8B%2F</url>
+    <content type="text"><![CDATA[解锁bootloader需要：sim卡 ，mi手机解锁工具 首先手机进入开发者模式（miui版本连击7次），进入解锁状态(需要sim卡联网) 绑定小米账号和设备(需验证码)，申请解锁设备 windows下载并运行mi手机解锁工具，登录小米账号 小米6手机关机后，同时长按音量“-”和电源，进入fastboot状态（界面出现一个兔子） 手机通过usb与电脑连接 点击解锁手机 解锁成功 刷入第三方twrp recovery找到小米6对应的twrp recovery版本，下载到本地 手机打开usb调试 终端运行 123456#进入fastbootadb reboot bootloader#刷入imgfastboot flash recovery twrp.img#重启fastboot reboot 进入recovery 1fastboot boot twrp.img 注意：有可能会进到自带的Mi recovery，这样就得重新刷。尽量重启后在进入小米的系统之前就进入twrp。 小米进recovery的按钮是同时按音量“+”和电源 &lt;可选：刷入lineage &gt;下载lineage 的固件 进入 twrp recovery 把固件传入手机 adb push lineage.zip /sdcard/ twrp 里install 固件（不选校验，选之后重启） 重启后如果有个绿色的弧线，说明进到lineage里了 刷入Magiskmagisk push 到手机上，使用twrp安装。 重启后手机上出现magisk manager 若magisk manager一直显示要更新，可以把更新通道换为其他的： 进入”设置”，选择自定义通道输入这个链接:https://qianyegroup.gitee.io/magiskbuilds/updates/custom.json]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Magisk</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[iOS with Extension砸壳全过程]]></title>
+    <url>%2F2019%2F10%2F10%2FiOS-with-Extension%E7%A0%B8%E5%A3%B3%E5%85%A8%E8%BF%87%E7%A8%8B%2F</url>
+    <content type="text"><![CDATA[准备工作 一部越狱的手机 dumpdecrypted或frida-ios-dump(砸壳使用) class-dump（导出砸壳后的二进制包的头文件） Cycript(Cydia)（在越狱手机的越狱市场下载，安装） OpenSSH(Cydia) （在越狱手机的越狱市场下载，安装） Frida(Cydia) （在越狱手机的越狱市场下载，安装） 重要步骤在APPStore中下载正版的应用到手机上以下以搜狗输入法为例（手机ios10.3.3 型号iphone 5c） ssh至手机，并查看路径转发手机22端口到主机2222端口 iproxy 2222 22 ssh至手机 ssh -p2222 root@127.0.0.1 查找 进程信息（此时app和extension都要打开） 123ps -e | grep Sogou cycript -p SogouInput dumpdecrypted砸壳下载并编译dumpdecrypted cd dumpdecrypted &amp;&amp; make 为dumpdecrypted.dylib签名codesign -fs &quot;iPhone Developer: my.guo@foxmail.com (WJ79M49LT4)&quot; dumpdecrypted.dylib 将dumpdecrypted.dylib拷贝到/usr/binsudo scp dumpdecrypted.dylib root@10.2.200.186:/usr/bin 执行以下命令为可执行文件砸壳 1DYLD_INSERT_LIBRARIES=dumpdecrypted.dylib /var/containers/Bundle/Application/EFE80EA8-BF4D-49C9-A342-B22357CA1A93/SogouInput.app/SogouInput 为extension砸壳 1DYLD_INSERT_LIBRARIES=dumpdecrypted.dylib /var/containers/Bundle/Application/EFE80EA8-BF4D-49C9-A342-B22357CA1A93/SogouInput.app/PlugIns/com.sogou.sogouinput.BaseKeyboard.appex/com.sogou.sogouinput.BaseKeyboard 结果会在执行目录下生成可执行文件.decrypted文件 将文件拷贝回电脑 sudo scp root@127.0.0.1:/SogouInput.decrypted ~/Desktop frida-ios-dump 砸壳按照说明配置环境 修改dump.py 中的user等 1234User = &apos;root&apos;Password = &apos;*****&apos;Host = &apos;localhost&apos;Port = 2222 开始砸壳 sudo ./dump.py com.sogou.sogouinput 查看可执行文件是否成功砸壳otool -l 可执行文件路径 | grep cryptid结果为1加密了，0没有加密]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>dump</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Mac更新bash至4.0以上]]></title>
+    <url>%2F2019%2F09%2F20%2FMac%E6%9B%B4%E6%96%B0bash%E8%87%B34-0%E4%BB%A5%E4%B8%8A%2F</url>
+    <content type="text"><![CDATA[Mac自带的bash为3.2版本，而最新的bash是5.0一上了。这导致bash无法支持新特性，而且执行脚本时也会提示bash要升级。 升级方法查看bash版本bash --version执行brew install bash 此时，bash虽然安装了，但是/bin/bash的版本依然没有改变。这是因为mac系统禁止更改系统目录的权限，引入sip机制，需要先关闭，修改，再打开这一系列操作 打开和关闭sip关闭sip 重启系统，然后按住Command+R 出现界面之后，在最上方菜单栏选择Utilities menu中Terminal 在Terminal中输入csrutil disable关闭SIP 重启reboot 加入软链接12sudo mv /bin/bash /bin/bash.originsudo ln -s /usr/local/bin/bash /bin/bash 修改完成之后，查看版本是否更改。更改后重新打开sip，打开时执行csrutil enable]]></content>
+      <categories>
+        <category>MacOS</category>
+      </categories>
+      <tags>
+        <tag>MacOS</tag>
+        <tag>bash</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题]]></title>
+    <url>%2F2019%2F09%2F20%2F%E8%A7%A3%E5%86%B3Mac%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88VirtualBox%EF%BC%89%E6%97%A0%E6%B3%95%E7%99%BB%E9%99%86Xcode%E7%9A%84%E5%BC%80%E5%8F%91%E8%B4%A6%E5%8F%B7%E9%97%AE%E9%A2%98%2F</url>
+    <content type="text"><![CDATA[问题表现形式登陆时输入正确的账户和密码，界面一直在loading状态，输入错误的密码会提示密码错误。与此同时，在网页上可以成功登陆苹果开发者网站，说明不是网络或与服务器连接上出现问题。 出现问题的原因在登陆app atore 或添加Xcode账户的时候，需要验证apple id。苹果在验证时会检查机器的smbios 信息，如果不是 mac 机器，就不让登录，虚拟机也不行。进入虚拟机后，点击左上角-关于本机 可查看虚拟机固件情况。如果是未经修饰的虚拟机，下面序列号等信息都为空 解决办法在VirtualBox的配置文件中有“ExtraData”部分，可以通过修改配置文件的方法，伪造出虚假的smbios信息。 如何获得虚假的smbios信息可以通过下载Chameleon-Wizard 软件或者Clover Configurator软件进行配置。配置方法比较傻瓜，选一个想要的型号，就会自动生成。最后保存为一个plist文件，需要的信息都在里面。 1234567891011121314151617&lt;ExtraDataItem name=&quot;GUI/InformationWindowGeometry&quot; value=&quot;0,45,1440,800,max&quot;/&gt;&lt;ExtraDataItem name=&quot;GUI/LastCloseAction&quot; value=&quot;PowerOff&quot;/&gt;&lt;ExtraDataItem name=&quot;GUI/LastNormalWindowPosition&quot; value=&quot;623,199,512,405&quot;/&gt;&lt;ExtraDataItem name=&quot;GUI/LastScaleWindowPosition&quot; value=&quot;400,194,640,480&quot;/&gt;&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBoardProduct&quot; value=&quot;Mac-06Fxxxx93F0323C5&quot;/&gt;&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBoardSerial&quot; value=&quot;C025xxxx0CDGDQPCB&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemFamily&quot; value=&quot;MacBook Pro&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemProduct&quot; value=&quot;MacBookPro11,4&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemSerial&quot; value=&quot;C02PQ4ZBG8WL&quot;/&gt;&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemUuid&quot; value=&quot;CAFECAFE-xxxx-CAFE-CAFE-DECAFFDECAFF&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiOEMVBoxVer&quot; value=&quot;string:1&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiOEMVBoxRev=&quot; value=&quot;string:.23456&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBIOSVersion&quot; value=&quot;MBP114.88Z.F000.B00.1906140921&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBIOSReleaseDate=&quot; value=&quot;06/14/2019&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal/Devices/smc/0/Config/DeviceKey&quot; value=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot;/&gt;&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC&quot; value=&quot;1&quot;/&gt; &lt;ExtraDataItem name=&quot;VBoxInternal2/SharedFoldersEnableSymlinksCreate/vagrant&quot; value=&quot;1&quot;/&gt; 通过配置命令修改信息cd至virtualbox目录下执行 VBoxManage setextradata &quot;OSName&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiSystemProduct&quot; &quot;MacBookPro11,3&quot; 修改SystemProduct信息其他信息类似 在虚拟机已经建立后，这种方法不一定能够成功修改，慎用 通过脚本直接新建虚拟机，在脚本里写上配置参数此方法参考开源项目macos-guest-virtualbox 具体步骤： 将工程下载或pull到本地 升级bash到bash4.0 参考Mac更新bash至4-0以上 安装依赖 bash coreutils wget unzip dmg2img 按照前面生成的plist信息修改脚本文件 cd 到目录下运行脚本 $ ./macos-guest-virtualbox.sh 一路enter，选择一下os版本，然后看提示信息一路enter最后虚拟机建立好后，可以看到虚拟机的信息已经跟真机类似了，而且跟我们配置的参数一样，后面xcode的账户果然也可以正常登录 其他问题vmware虚拟机相同问题同样的，如果vmware出现相同问题，也可以通过修改配置文件的方法解决，具体参考：https://www.insanelymac.com/forum/topic/292170-how-to-spoof-real-mac-in-vmware/?page=1https://www.insanelymac.com/forum/topic/309654-run-vanilla-os-x-el-capitan-sierra-high-sierra-or-mojave-in-virtualbox-5xx-on-a-windows-host/]]></content>
+      <categories>
+        <category>MacOS</category>
+      </categories>
+      <tags>
+        <tag>MacOS</tag>
+        <tag>Xcode</tag>
+        <tag>VirtualBox</tag>
+        <tag>黑苹果</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Xcode的各种坑]]></title>
+    <url>%2F2019%2F09%2F12%2FXcode%E7%9A%84%E5%90%84%E7%A7%8D%E5%9D%91%2F</url>
+    <content type="text"><![CDATA[作为一个iOS萌新，使用Xcode的过程真是一言难尽，遇到各种奇怪的耽误事儿的问题。这里就占个楼专门总结使用中碰到的问题，以后遇到了也有的参考。 什么？还需要开发者账号？第一次使用Xcode的时候，我以为它和VS、Eclipse什么的一样就是一个简单的开发环境。后来才知道苹果对开发者管控的很严格，开发者需要注册开发者账号才能具备签名打包工程，发布到Apple Store的资格。 一般来说，开发者需要到苹果开发者网站注册开发者账号。具体的流程为： 注册apple id (注意国籍中国 + 年龄&gt;18) 加入apple developer计划 根据自己的身份进行填写注册 完成付款，个人是每年99刀 在这之后就可以创建证书和包了 不过自15年之后，也就是Xcode7.x之后，开发者可以用中间的apple id申请一个免费的开发账号。不过这个账号只有测试功能，且权限有限，只支持三个测试设备，用的时候要很节省。 Bundle Identifier？那是什么东西？在我刚开始尝试OC的时候，我就像自己学习C或Java一样，疯狂建了一堆类似“TEST”、“HelloWorld”、“MyFirstApp”这样的OC工程。建工程之前会让你填写Team或者Bundle Identifier之类的信息，年轻的我以为这只是一些工程或者组织信息描述，就随手填了名字。没想到，在我疯狂建了各种名字的工程之后，突然有天再新建时提示我Bundle Identifier满了…原来一个账号的Bundle Identifier是有限的，尤其是上架之后不能与其他人的重复。满了之后再想用只能等之前的过期了。另外，测试设备的数量也是有限的，占用了之后只能等每年Apple清理掉了。 打开工程时一直loading转圈？有一天，我打开一个大工程时，Xcode一直右下角在loading。而且只能通过杀死进程的方法才能关掉。解决办法:Xcode打开工程假死不过我当时好像是把整个工程都删了，文件夹清理一遍才好。 添加账号时一直loading转圈？这个问题是最让我烦躁的，填了账户密码之后就一直转圈，一点反应没有。有人说是因为验证的服务器有问题，不过我试了之后发现输了错误的密码之后是有错误提示的。说明验证是能验证的，应该是接下来的步骤卡死。这个问题在某一天突然解决，又在某一天突然出现，毫无防备。 如果在虚拟机上出现该问题，参考文章解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题 使用低版本SDK有时在开发中，我们升级Xcode为较高的版本，或者由于mac系统版本限制只能使用某个较高版本的Xcode，而可其支持的最低版本iOS SDK却比我们需要的版本高。这时就需要将较低版本的SDK移过来。首先，从旧版本Xcode中将SDK拷贝出来，路径为:Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs然后将其拷贝到新版本的对应位置再打开/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Info.plist文件改变MinimumSDKVersion的值，重启Xcode会识别大于等于MinimumSDKVersion的所有SDK]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>Xcode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Hook技术的原理和实现]]></title>
+    <url>%2F2019%2F09%2F12%2FHook%E6%8A%80%E6%9C%AF%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0%2F</url>
+    <content type="text"></content>
+  </entry>
+  <entry>
+    <title><![CDATA[Arm指令]]></title>
+    <url>%2F2019%2F09%2F04%2FArm%E6%8C%87%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[传输数据指令CPSR状态寄存器： .tg {border-collapse:collapse;border-spacing:0;} .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;} .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;} .tg .tg-baqh{text-align:center;vertical-align:top} .tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top} 条件码标志 保留 控制位 31 30 29 28 27 26 25 24-8 7 6 5 4 3 2 1 0 N Z C V I F T M4 M3 M2 M1 M0 Less than Zero Carry Overflow IRQ FIQ State Mode bits 数据处理指令语法 &lt;操作{&lt;cond&gt;}{S}&gt; &lt;Rd&gt;, &lt;Rn&gt;, &lt;Operand2&gt; &lt;操作码&gt; &lt;目标寄存器Rd&gt; &lt;第一操作寄存器Rn&gt; &lt;第二操作数Operand2&gt; 第一个位置必须是寄存器，第二操作数可以是寄存器，也可以是立即数 数据传送指令 MOV,MVN指令的几种形式： .tg {border-collapse:collapse;border-spacing:0;} .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;} .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;} .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top} .tg .tg-0lax{text-align:left;vertical-align:top} 从另一个寄存器、被移位的寄存器或将一个立即数加载到目的寄存器 mov 寄存器、 立即数 mov r0,#0x1 r0 = 0x1 mov 寄存器、 寄存器 mov r2, r1 r2 = r1 取反后再传值,比MOV多了一步取反 mov 寄存器、 立即数 mvn r0,#0x1 r0 = ~0x1 mov 寄存器、 寄存器 mvn r2, r1 r2 = ~r1 movx 其中 x 可以是下面的字符: l用于32位的长字值w用于16位的字值 把 16 位立即数放到寄存器的低16位，高16位清0 t用于16位的字值 把 16 位立即数放到寄存器的高16位，低 16位不影响b用于8位的字节值 算术运算指令 ADD/ADC , SUB/SBC , MULADD12345678;ADD加法指令mov r0, #1mov r1, #1add r2, r1, r0 ;r2 = r1 + r0add r2, r1, #2 ;r2 = r1 + 2;ADC带进位加法指令,即除了加两个数以外,还要把CPSR的C值也要带进来ADDS R0,R1,R2; R0=R1+R2,ADDS中S表示把进位结果写入CPSRADC R5,R3,R4 ;R5=R3+R4+C SUB12345678;SUB减法指令mov r0, #5mov r1, #3sub r2, r0, r1 ;r2 = r0 - r1sub r2, r1, #2 ;r2 = r1 - 2;SBC带进位减法指令,即除了加两个数以外,还要把CPSR的C值也要带进来,类似ADCSUBS R0,R1,R2; R0=R1-R2,SUBS中S表示把进位结果写入CPSRSBC R5,R3,R4 ;R5=R3-R4-C MUL123;MUL 乘法指令MUL R0,R1,R2; R0=R1*R2MUL R0,R1,#3 ;R0=R1*3 位操作指令 AND,ORR, TST,BICAND 与操作12AND R0,R1,R2; R0=R1 &amp; R2AND R0,R1,#0xFF ;R0=R1 &amp; 0xFF ORR 或操作12ORR R0,R1,R2; R0=R1 | R2ORR R0,R1,#0xFF ;R0=R1 | 0xFF TST 测试某一位是否为1,并把结果写入CPSR,供下一句使用12TST R1,#0xffe; 等同于if(R1 &amp; 0xffe)TST R1,#%1;测试最低位是否为1,%表示二进制 BIC 清位操作12BIC R0，R0，＃0xF ； 等同于 R0 &amp;=~(0xF)BIC R0，R0，＃％1011 ； 该指令清除 R0 中的位 0 1 3，其余的位保持; %表示是二进制,0x表示十六进制 cmp指令cmp是比较指令,cmp的功能相当于减法指令。它不保存结果，只是影响相应的标志位。其他的指令通过识别这些被影响的标志位来得知比较结果。 cmp指令格式: cmp 操作对象1, 操作对象2 不同大小数进行cmp指令时的结果： cmp eax, eax (两数相等) cmp eax, ebx (eax - ebx = 03h) cmp al, bl (al - bl = -03h) 我们怎么判断大小呢？若执行指令后 （1）ZF ZF=1 ，则说明两个数相等，因为zero为1说明结果为0。 （2）CF 当无符号时： CF=1 则说明了有进位或借位，cmp是进行的减操作，故可以看出为借位，所以，此时oprd1 &lt; oprd2 CF=0 则说明了无借位，但此时要注意ZF是否为0，若为0，则说明结果不为0，故此时oprd1&gt;oprd2 当有符号时： 若SF=0，OF=0 则说明了此时的值为正数，没有溢出，可以直观的看出，oprd1&gt;oprd2 若SF=1，OF=0 则说明了此时的值为负数，没有溢出，则为oprd1 &lt; oprd2 若SF=0，OF=1 则说明了此时的值为正数，有溢出，可以看出oprd1 &lt; oprd2 若SF=1，OF=1则说明了此时的值为负数，有溢出，可以看出oprd1 &gt; oprd2 beq &amp; bnqbeq指令beq指令格式: beq 地址 若标志位ZF为1，则跳转；若为0，则不跳转 （若前面有cmp指令，则意味着相等跳转，不等执行下一步） bnq指令bnq指令格式: bnq 地址 若标志位ZF为0，则跳转；若为1，则不跳转 （若前面有cmp指令，则意味着不等跳转，相等执行下一步） 寄存器入栈及出栈指令 POP PUSH实现低寄存器、可选的 LR 寄存器入栈寄存器、可选的 PC寄存器出栈操作，堆栈地址由 SP 寄存设置,堆栈是满递减堆栈. 指令格式： 12PUSH &#123;reglist[,LR]&#125; reglist 入栈/出栈低寄存器列表,即 R0~R7 LR 入栈时的可选寄存器POP &#123;reglist[,PC]&#125; PC 出栈时的可选寄存器 STR指令STR指令用于从源寄存器中将一个32位的字数据传送到存储器中。 指令格式： STR{条件} 源寄存器，&lt;存储器地址&gt; 123STR R0，[R1]，＃8 ；将R0中的字数据写入以R1为地址的存储器中，并将新地址R1＋8写入R1。STR R0，[R1，＃8] ；将R0中的字数据写入以R1＋8为地址的存储器中。”str r1, [r0] ；将r1寄存器的值，传送到地址值为r0的（存储器）内存中 条件指令https://www.anquanke.com/post/id/86422 特殊的跟0的比较跳转指令大于等于0（BGEZ），大于0（BGTZ），小于等于0（BLEZ），还有小于0（BLTZ） 分支指令将一个寄存器的值跟0比较BEQ,BGE,BGT,BLE,BLT,BNE]]></content>
+      <categories>
+        <category>汇编</category>
+      </categories>
+      <tags>
+        <tag>汇编</tag>
+        <tag>逆向</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决mac上使用VirtualBox建立mac虚拟机分辨率问题]]></title>
+    <url>%2F2019%2F08%2F21%2F%E8%A7%A3%E5%86%B3mac%E4%B8%8A%E4%BD%BF%E7%94%A8VirtualBox%E5%BB%BA%E7%AB%8Bmac%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%86%E8%BE%A8%E7%8E%87%E9%97%AE%E9%A2%98%2F</url>
+    <content type="text"><![CDATA[mac主机使用virtualbox安装mac虚拟机经常出现分辨率问题，虚拟机 关于本机-&gt;显示器 里可查看可用的分辨率选项很低。那么如何将虚拟机的分辨率调整至1920x1080,或是2880x1800呢？ 首先将VirtualBox全部关闭终端进入VirtualBox.app路径下执行以下命令： 12VBoxManage setextradata &quot;mac10.10.5&quot; CustomVideoMode1 2880x1800x32 #数组间的符号为小写字母x, 下同VBoxManage setextradata &quot;mac10.10.5&quot; VBoxInternal2/EfiGraphicsResolution 2880x1800 引号内为虚拟机名称，可通过VBoxManage list -s vms命令查看]]></content>
+      <categories>
+        <category>MacOS</category>
+      </categories>
+      <tags>
+        <tag>MacOS</tag>
+        <tag>VirtualBox</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[iOS应用ipa重签名]]></title>
+    <url>%2F2019%2F08%2F21%2FiOS%E5%BA%94%E7%94%A8ipa%E9%87%8D%E7%AD%BE%E5%90%8D%2F</url>
+    <content type="text"><![CDATA[使用Xcode重签名 新建一个工程编译 获得这个新工程的签名 查看位置：product-&gt;app-&gt;在path中打开 用要签名的app替换掉工程app，把要签名的app的名字改为工程名字 把要签名app的info.plist里的buddleid 改为工程的bundleid 使用要签名的证书对app进行签名 1codesign -fs &quot;iPhone Developer: amor.diavolo@icloud.com (K239F7Y6DD)&quot; MTPotal.app 查看本机证书： security find-identity -v -p codesigning 在xcode中run，将会把签名后的app安装在真机上，此时可看到ui界面，也可lldb进行调试。 使用Monkeydev自动签名 创建一个MonkeyDev项目 把砸了壳的IPA包放到Target目录下 直接运行就可以跑到手机上了]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>逆向</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Homebrew安装与使用]]></title>
+    <url>%2F2019%2F08%2F19%2FHome-brew%E4%BD%BF%E7%94%A8%2F</url>
+    <content type="text"><![CDATA[Homebrew是一款MacOS平台下自由及开放源代码的软件包管理系统，用以简化macOS系统上的软件安装过程。可以理解为MacOS版的yum或apt-get吧 Homebrew安装Homebrew是基于Ruby的，安装过程也非常很简单，只需执行： 1/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot; Homebrew安装成功后，会自动创建目录 /usr/local/Cellar 来存放Homebrew安装的程序，之后在终端就可以使用 brew 命令了。 Homebrew使用常见的Homebrew命令123456789101112131415161718192021222324252627282930313233//查看brew的帮助brew –help //查看Homebrew版本brew -v//安装软件brew install &lt;packageName&gt; //卸载软件brew uninstall &lt;packageName&gt; //搜索软件brew search &lt;packageName&gt; //显示已经安装软件列表brew list //更新软件，把所有的Formula目录更新，并且会对本机已经安装并有更新的软件用*标明。brew update //更新某具体软件brew upgrade &lt;packageName&gt; //查看软件信息brew [info | home] [FORMULA...] //删除程序，和upgrade一样，单个软件删除和所有程序老版删除。brew cleanup &lt;packageName&gt;brew cleanup //查看那些已安装的程序需要更新brew outdated brew卸载软件及依赖123$ brew tap beeftornado/rmtree$ brew rmtree &lt;package&gt; brew安装指定版本软件首先把Homebrew克隆下来 1git clone https://github.com/Homebrew/homebrew-core 执行 1git log master -- Formula/qemu.rb 在提交记录里查找到需要的的提交版本,如qemu2.12.0的提交版本为:commit 22ee44faa55709ca466b5b17330ca72a55a2e8dd 将版本回滚到需要的版本，如将qemu版本回滚到2.12.0 1git checkout 22ee44faa55709ca466b5b17330ca72a55a2e8dd 将qemu.rb拷贝出来，执行brew install /Path/qemu.rb 安装 切换brew源如果brew的速度太慢可以切换brew源，清华源：https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git 通过以下操作进行替换和还原 替换 brew.git/ homebrew-core.git仓库地址 12345678910# 替换成清华的 brew.git 仓库地址:cd &quot;$(brew --repo)&quot;git remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git# 替换成清华的 homebrew-core.git 仓库地址:cd &quot;$(brew --repo)/Library/Taps/homebrew/homebrew-core&quot;git remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git#更新brew update 还原 brew.git/ homebrew-core.git 仓库地址 12345678910# 还原为官方提供的 brew.git 仓库地址cd &quot;$(brew --repo)&quot;git remote set-url origin https://github.com/Homebrew/brew.git# 还原为官方提供的 homebrew-core.git 仓库地址cd &quot;$(brew --repo)/Library/Taps/homebrew/homebrew-core&quot;git remote set-url origin https://github.com/Homebrew/homebrew-core.git#更新brew update]]></content>
+      <categories>
+        <category>MacOS</category>
+      </categories>
+      <tags>
+        <tag>MacOS</tag>
+        <tag>Homebrew</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[debugserver + lldb 动态调试]]></title>
+    <url>%2F2019%2F08%2F16%2Fdebugserver-lldb-%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%2F</url>
+    <content type="text"><![CDATA[配置debugserverdebugserver运行在的iOS上，顾名思义，它作为服务端，实际执行LLDB（作为客户端）传过来的命令，再把执行结果反馈给LLDB，显示给用户，即所谓的“远程调试”。在默认情况下，iOS设备上并没有安装debugserver，只有在设备连接过一次的Xcode，并在窗口→设备菜单中添加此设备后，debugserver才会被Xcode中安装到iOS版的“/开发人员的/ usr / bin中/”目录下。 将debugserver从手机传到mac使用iproxy工具，将当前连接设备的22端口（SSH）映射到电脑的2222端口 1iproxy 2222 22 SSH到usb设备上 1ssh -p2222 root@127.0.0.1 传输文件 1scp -P2222 root@127.0.0.1:/Developer/usr/bin/debugserver ~/Desktop 给debugserver瘦身对照表格找到设备的ARM信息例如iphone为5c,执行 1lipo -thin armv7s ~/debugserver -output ~/debugserver 给debugserver添加权限安装ldid 1brew install ldid 下载ent.xml到MACOS目录，然后运行： 1ldid -Sent.xml debugserver 注意“-S”选项与“Sent.xml”之间是没有空格的，Sent.xml是设置二进制授权的文件，没有的话可以去网上找找，也可在工程中找entitlements文件获得。 将经过处理的debugserver拷回手机1scp -P2222 ~/debugserver root@127.0.0.1:/usr/bin/debugserver 连接进程通过端口号调试ssh到ios上，执行 1ps aux 查看pid 1debugserver *:1234 -a prossesname/pid 文件方式启动，不需端口号1debugserver -x frontboard *:1234 /var/containers/Bundle/Application/1452A4F7-C5B1-4654-9CDC-4D94C3C94F47/MTPotal.app 把本地端口映射到苹果端口1iproxy 1234 1234 在Mac系统上用LLDB远程调试1process connect connect://localhost:1234 这条命令执行耗时比较长，需要耐心等一会 常用lldb命令12345678910111213#查看地址image list -o -f#查看类内地址po [className _shortMethodDescription]#设置断点br s -a 0x452C96#删除所有断点br del #禁用第3个断点（启用en）br dis 3-c 用来设置断点条件-o 来设置单次断点 更多命令查看手册 参考链接http://iosre.com/t/debugserver-lldb-gdb/65http://zhz.io/2018/07/05/%E9%82%A3%E4%B8%AALLDB%E4%BD%A0%E7%9C%9F%E7%9A%84%E4%BA%86%E8%A7%A3%E5%90%97/]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>逆向</tag>
+        <tag>debugserver</tag>
+        <tag>lldb</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[theos安装、环境配置]]></title>
+    <url>%2F2019%2F08%2F16%2Ftheos%E5%AE%89%E8%A3%85%E3%80%81%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%2F</url>
+    <content type="text"><![CDATA[Theos 是一个越狱开发工具包，安装方法可以参考 Wiki。 安装依赖安装 dpkgdpkg(Debian Packager) 是 Theos 依赖工具之一，可以使用 dpkg 制作 deb，Theos 开发的插件都会以 deb 的格式进行发布，在安装 Theos 之前需要安装 dpkg. 安装借助于Homebrew安装，确保先安装 Homebrew。 1brew install dpkg 安装 ldidldid是越狱祖师爷Saurik开发的一款二进制授权管理软件，可以对越狱应用进行SHA1运算生成授权，让软件包可以在iPhone上执行。Theos 开发中，iOS 文件的签名使用 ldid 工具完成，代替了 XCode 中的 Codesign。 1brew install ldid 安装Thoes将 Theos 安装在 /opt/theos 目录下 12sudo Git clone --recursive https://github.com/theos/theos.git /opt/theos//recursive表示递归 将 /opt/theos 权限改为自己1sudo chown $(id -u):$(id -g) /opt/theos 配置环境变量 在~./bash_profile中加上: 12export THEOS=/opt/theosexport PATH=/opt/theos/bin/:$PATH 执行一遍source命令使得环境变量生效 1source ~/.bash_profile 测试是否安装成功1nic.pl New Instance Creator开始执行则已经安装成功 Theos升级到最新版1git submodule update –recursive 参考链接：http://iosre.com/t/theos/4928]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>逆向</tag>
+        <tag>theos</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[C/C++预处理指令]]></title>
+    <url>%2F2019%2F08%2F16%2FC%3AC%2B%2B%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[预处理指令是我们写在程序代码中的给预处理器(preprocessor)的命令，该指令将在编译器进行编译之前对源代码做某些转换。预处理指令以#号开头（# 号必须是该行除了任何空白字符外的第一个字符），#后是指令关键字，在关键字和# 号之间允许存在任意个数的空白字符，整行语句构成了一条预处理指令。 使用预处理功能便于程序的修改、阅读、移植和调试，也便于实现模块化程序设计。 常见的预处理指令 指令 说明 # 空指令，无任何效果 #include 包含一个源代码文件 #define 定义宏 #undef 取消已定义的宏 #if 如果给定条件为真，则编译下面代码 #ifdef 如果宏已经定义，则编译下面代码 #ifndef 如果宏没有定义，则编译下面代码 #elif 如果前面的#if给定条件不为真，当前条件为真，则编译下面代码 #endif 结束一个#if……#else条件编译块 #include当预处理器找到一个#include 指令时，它用指定文件的全部内容替换这条语句。声明包含一个文件有两种方式： 1#include &quot;file&quot; or #include &lt;file&gt; 两种表达的唯一区别是编译器应该在什么路经下寻找指定的文件。 第一种情况下，文件名被写在双引号中，编译器首先在包含这条指令的文件所在的目录下进行寻找，如果找不到指定文件，编译器再到被配置的默认路径下（也就是标准头文件路径下）进行寻找。 如果文件名是在尖括号 &lt;&gt; 中，编译器会直接到默认标准头文件路径下寻找。 #define #define可以被用来生成宏定义常量(defined constantants 或 macros)，它的形式是： 1#define [MacroName] [MacroValue] 它的作用是定义一个叫做name 的宏定义，然后每当在程序中遇到这个名字的时候，它就会被value代替。 取消宏则是： 1#undef [MacroName] 简单的define定义1#define MAXTIME 1000 一个简单的MAXTIME就定义好了，它代表1000，假设在程序里面写 1if(i &lt; MAXTIME)&#123;.........&#125; 编译器在处理这个代码之前会对MAXTIME进行处理替换为1000。 这种定义看起来相似于普通的常量定义CONST，但也有着不同，由于define的定义更像是简单的文本替换，而不是作为一个量来使用，这个问题在以下反映的尤为突出。 define的“函数定义”define能够像函数那样接受一些參数，例如以下 1#define max(x,y) (x)&gt;(y)?(x):(y); 这个定义就将返回两个数中较大的那个，看到了吗？由于这个“函数”没有类型检查，就好像一个函数模板似的，当然，它绝对没有模板那么安全就是了。能够作为一个简单的模板来使用而已。 可是这样做的话存在隐患，样例例如以下： 1#define Add(a,b) a+b; 在一般使用的时候是没有问题的，可是假设遇到如： 1c * Add(a,b) * d 的时候就会出现故障，代数式的本意是a+b然后去和c，d相乘，可是由于使用了define（它仅仅是一个简单的替换），所以式子实际上变成了：c*a + b*d 另外举一个样例： 12#define pin (int*);pin a,b; 本意是a和b都是int型指针，可是实际上变成int* a,b; a是int型指针，而b是int型变量。这是应该使用typedef来取代define，这样a和b就都是int型指针了。所以我们在定义的时候，养成一个良好的习惯，建议全部的层次都要加括号。 define的单行定义123#define A(x) T_##x#define B（x) #@x#define C（x) #x 我们如果：x=1，则有： A(1)——&gt; T_1 （T_##x,##符号是记号粘黏符号，将前后的字符粘黏起来。）B(1)——&gt; ‘1’ （ #@x , #@ 符号会将宏的参数进行字符串字面量化，并且加‘’号）C(1)——&gt; “1” （ #x ,#符号会将宏的参数进行字符串字面量化，并且加””号） define的多行定义define能够替代多行的代码，比如MFC中的宏定义 123456#define MACRO(arg1, arg2) do&#123; \ \ stmt1; \ stmt2; \ \ &#125; while(0) 注意： 使用#define声明多行宏函数与声明单行宏函数没有本质区别； 多行声明时，回车换行前要加上字符‘\’，即“[enter]”，注意字符‘\’后要紧跟回车键，中间不能有空格或其他字符。 另外，在Linux操作系统中 “[enter]”称为跳脱字符，意思是一行写不完的时候可以使用跳脱字符换行，但对于操作系统而言，它认为你并没有换行。 define和typedef的差别typedef是一种用来声明自定义数据类型,配合各种原有数据类型达到简化编程目的的类型定义关键字，可以使用typedef为已有数据类型取别名。 两者的区别： 执行时间不同 关键字 typedef 在编译阶段有效, 犹豫是在编译阶段, 因此 typededf 有类型检查的功能. define 是宏定义, 发生在预处理阶段, 也就是编译之前, 它只是进行简单而机械的字符串替换, 而不进行任何检查. 功能不同 typedef 用来定义类型的别名, 这些类型不止包含内部类型(init,char等), 还包括自定义类型(如struct), 可以起到使类型易于记忆的功能.如： 12typedef int (*PF) (const char *, const char *); //定义一个指向函数的指针的数据类型PF，其中函数返回值为int，参数为const char *. 这个就和定义 Block 很像了 typedef 可定义机器无关的类型，如，你可以定义一个浮点类型，在目标机器上它可以获得最高的精度。如： 123456789typedef long double REAL; //在不支持 long double 的机器上，该 typedef 看起来会是下面这样：typedef double REAL; //并且，在连 double 都不支持的机器上，该 typedef 看起来会是这样：typedef float REAL; define 不止可以为类型取别名, 还可以定义常量, 变量, 编译开关等. 作用域不同 #define 没有作用域的限制, 只要是之前预定义过的宏, 在以后的程序中都可以使用。而 typedef 有自己的作用域.1234567void fun() &#123; #define A int&#125;void gun() &#123;//在这里也可以使用A，因为宏替换没有作用域，//但如果上面用的是typedef，那这里就不能用A ，不过一般不在函数内使用typedef&#125; 对指针的操作不同 二者修饰指针类型时, 作用不同123456Typedef int * pint； #define PINT int * Const pint p；//p不可更改，p指向的内容可以更改，相当于 int * const p; Const PINT p；//p可以更改，p指向的内容不能更改，相当于 const int *p；或 int const *p； pint s1, s2; //s1和s2都是int型指针 PINT s3, s4; //相当于int * s3，s4；只有一个是指针。 条件编译——#ifdef, #ifndef, #if, #endif, #else and #elif这些指令可以使程序的一部分在某种条件下被忽略。 #ifdef #ifdef 可以使一段程序只有在某个指定常量已经被定义了的情况下才被编译，无论被定义的值是什么。它的操作是： 123#ifdef name// code here#endif 例如： 123#ifdef MAX_WIDTHchar str[MAX_WIDTH];#endif 在这个例子中，语句char str[MAX_WIDTH]; 只有在宏定义常量MAX_WIDTH 已经被定义的情况下才被编译器考虑，不管它的值是什么。如果它还没有被定义，这一行代码则不会被包括在程序中。 #ifndef #ifndef 起相反的作用：在指令#ifndef 和 #endif 之间的代码只有在某个常量没有被定义的情况下才被编译，例如： 1234#ifndef MAX_WIDTH#define MAX_WIDTH 100#endifchar str[MAX_WIDTH]; 这个例子中，如果当处理到这段代码的时候MAX_WIDTH 还没有被定义，则它会被定义为值100。而如果它已经被定义了，那么它会保持原值 (因为#define 语句这一行不会被执行) 。 #if, #else 和 #elif指令#if, #else 和 #elif (elif = else if) 用来使得其后面所跟的程序部分只有在特定条件下才被编译。这些条件只能够是常量表达式，例如： 1234567891011121314#if MAX_WIDTH&gt;200#undef MAX_WIDTH#define MAX_WIDTH 200#elsif MAX_WIDTH&lt;50#undef MAX_WIDTH#define MAX_WIDTH 50#else#undef MAX_WIDTH#define MAX_WIDTH 100#endifchar str[MAX_WIDTH]; 注意看这一连串的指令 #if, #elsif 和 #else 是怎样以 #endif 结尾的。 常常使用宏来调试代码:1234567891011121314151617#if 0///&lt; 旧的代码(或函数) (旧的代码, 将会被预处理的时候,屏蔽掉, 不进行编译)#else///&lt; 新的代码(或函数)#endif #ifndef JOE_DEBUG///&lt; 新的代码(或函数)#else///&lt; 旧的代码(或函数) (旧的代码, 将会被预处理的时候,屏蔽掉, 不进行编译)#endif #ifdef Q_DEBUG///&lt; 新的代码(或函数)#else///&lt; 旧的代码(或函数) (旧的代码, 将会被预处理的时候,屏蔽掉, 不进行编译)#endif #line当我们编译一段程序的时候，如果有错误发生，编译器会在错误前面显示出错文件的名称以及文件中的第几行发生的错误。 指令#line 可以使我们对这两点进行控制，也就是说当出错时显示文件中的行数以及我们希望显示的文件名。它的格式是： 1#line number &quot;filename&quot; 这里number 是将会赋给下一行的新行数。它后面的行数从这一点逐个递增。 filename 是一个可选参数，用来替换自此行以后出错时显示的文件名，直到有另外一个#line指令替换它或直到文件的末尾。例如： 12#line 1 &quot;assigning variable&quot;int a?; 这段代码将会产生一个错误，显示为在文件”assigning variable”, line 1 。 #error这个指令将中断编译过程并返回一个参数中定义的出错信息，例如： 123#ifndef __cplusplus#error A C++ compiler is required#endif 这个例子中如果__cplusplus没有被定义就会中断编译过程。 #pragma这个指令是用来对编译器进行配置的，针对你所使用的平台和编译器而有所不同。要了解更多信息，请参考你的编译器手册。如果你的编译器不支持某个#pragma的特定参数，这个参数会被忽略，不会产生出错。 预定义宏 (Predefined macro names)以下宏名称在任何时候都是定义好的： macro value LINE 整数值，表示当前正在编译的行在源文件中的行数。 FILE 字符串，表示被编译的源文件的文件名。 DATE 一个格式为 “Mmm dd yyyy” 的字符串，存储编译开始的日期。 TIME 一个格式为 “hh:mm:ss” 的字符串，存储编译开始的时间。 STDC 如果编译器接受标准C，那么值为1. （整型） __cplusplus 整数值，所有C++编译器都定义了这个常量为某个值。如果这个编译器是完全遵守C++标准的，它的值应该等于或大于199711L，具体值取决于它遵守的是哪个版本的标准。 参考文献:https://www.cnblogs.com/zi-xing/p/4550246.htmlhttps://www.cnblogs.com/lcchuguo/p/4005360.htmlhttps://www.kancloud.cn/kancloud/cplusplus/62276http://blog.sina.com.cn/s/blog_4fc2fb600102yds4.htmlhttps://www.jianshu.com/p/53ac91a23979]]></content>
+      <categories>
+        <category>C/C++</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Apple Opensource 下载Apple开源项目]]></title>
+    <url>%2F2019%2F08%2F16%2FApple-Opensource%2F</url>
+    <content type="text"><![CDATA[在学习OC的过程中，经常需要结合源码一起理解。Apple的很多项目会发布在Apple Open Source上，比如macOS、Xcode、iOS等的各个release版本都能在上面找到。 这里示例Objective-C的源码获取方式：源码的在线浏览：https://opensource.apple.com/source/objc4/ 获取tar包：https://opensource.apple.com/tarballs/objc4/ 开发工具的更多版本:https://developer.apple.com/download/more/ 接下来就可以尽情学习啦~]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>Objective-C</tag>
+        <tag>Apple Opensource</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Frida在iOS平台进行OC函数hook的常用方法]]></title>
+    <url>%2F2019%2F08%2F12%2FFrida%2F</url>
+    <content type="text"><![CDATA[frida是一款基于python + java 的hook框架，可运行在Android、iOS、Linux、Windows、MAC OS X各平台，主要使用动态二进制插桩（dynamic binary instrumentation ,DBI）技术。 动态二进制插桩技术，可以在不影响程序动态执行结果的前提下，按照用户的分析需求，在程序执行过程中插入特定分析代码，实现对程序动态执行过程的监控与分析。目前，应用广泛的动态二进制分析平台有Pin，DynamoRIO和Frida等。 这篇文章针对已经对Frida有过了解的初学者，对Frida的实际操作中常用方法进行总结。如果你还没有使用过Frida，可以先阅读Frida的官方文档，里面很详细地说明了Frida的功能和使用方式。 Python脚本的撰写1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162from __future__ import print_functionimport fridaimport sys#进程名process_name = &apos;myprocess&apos;#导入的js脚本js_file_name = &apos;myhookjs.js&apos;# 自定义回调函数数据通过send（message [，data]）传递给python的on_message（消息，数据）函数，其中我们前面已经介绍过了，第一个参数是一个python字典类型，其中的message[&apos;payload&apos;]存放的就是第一个参数内容def on_message(message, data): if message[&apos;type&apos;] == &apos;send&apos;: print(message[&apos;payload&apos;]) elif message[&apos;type&apos;] == &apos;error&apos;: print(message[&apos;stack&apos;]) # hook逻辑脚本def get_js_code(): js_file = open(js_file_name) # type: BinaryIO return js_file.read()#start hereif __name__ == &apos;__main__&apos;:# 注入进程,attach传入进程名称（字符串）或者进程号（整数） process_id = 0 device = frida.get_usb_device() # 循环等待，根据进程名查找进程pid。找到执行hook while True: try: process1 = device.get_process(process_name) process_id = process1.pid #也可用 #pid = device.spawn([“com.android.chrome”]) print(process_id) break except: pass session = device.attach(process_id) # 指定JavaScript脚本 #script = session.create_script(get_js_code()% int(sys.argv[1], 16))) script = session.create_script(get_js_code()) script.on(&apos;message&apos;, on_message) script.load() # 读取返回输入 sys.stdin.read() #int()函数把字符串表示的16进制数转换成整数 #上面的jscode % int(sys.argv[1], 16)是python格式化字符串的语法 Frida hook Object-Cattach方法123456789101112131415161718192021222324var className = &quot;className&quot;;var funcName = &quot;functionName&quot;;var hook = eval(&apos;ObjC.classes.&apos; + className + &apos;[&quot;&apos; + funcName + &apos;&quot;]&apos;);#Interceptor.attach(target, callbacks)#target是NativePointer指定要拦截调用的函数的地址#如果从Frida API获取地址（例如Module.getExportByName()），Frida将处理详细信息Interceptor.attach(hook.implementation,&#123;#回调函数给出一个参数 args，可用于读取或写入参数作为NativePointer对象数组 onEnter: function(args) &#123; &#125;,#给定一个参数的回调函数，该参数 retval是NativePointer包含原始返回值的衍生对象#请注意，此对象在onLeave调用中循环使用，因此请勿在回调之外存储和使用它。如果需要存储包含的值，请进行深层复制，例如：ptr(retval.toString()) onLeave: function(retval) &#123; &#125; &#125;); 查看参数类型12#objc的函数，第0个参数是id，第1个参数是SEL，真正的参数从args[2]开始console.log(&quot;Type of arg[2] -&gt; &quot; + new ObjC.Object(args[2]).$className) 参数（返回值）NS与js类型转换12345678910111213141516171819202122232425262728293031#log Stringvar myString = new ObjC.Object(args[2]);console.log(&quot;String argument: &quot; + myString.toString());#NSString(NCFString) to String var NSString = new ObjC.Object(args[2]); var str = NSString.UTF8String();#replace js String str = str.replace(/BJP/,&quot;HZH&quot;);#log String console.log(str);#NSNumber to Int var myNumber = args[3].toInt32(); console.log(myNumber); #Converting NSData to String var data = new ObjC.Object(args[2]); var myString = data.bytes().readUtf8String(data.length()); console.log(myString); #Converting NSData to Base64String var myString = new ObjC.Object(args[2]); var base = myString.base64EncodedStringWithOptions_(0) console.log(&quot;String argument: &quot; + base); Tip: 2nd argument (number of bytes) is not required if the string data is null-terminated.#Converting NSData to Binary Datavar data = new ObjC.Object(args[2]);data.bytes().readByteArray(data.length()); 替换参数123var str =&quot;hello&quot;;var newstring = ObjC.classes.NSString.stringWithString_(str); args[2] = newstring; 替换返回值1234#用整数1337替换返回值retval.replace(1337)#用指针替换retval.replace(ptr(&quot;0x1234&quot;)) 调用函数123456var st = Memory.allocUtf8String(&quot;TESTMEPLZ!&quot;);#In NativeFunction param 2 is the return value type,#and param 3 is an array of input typesvar f = new NativeFunction(hook.implementation, &apos;pointer&apos;, [&apos;pointer&apos;,&apos;char&apos;,&apos;pointer&apos;]);#f(st,0,NSString1); 通过一个函数获得其他函数地址进行hook123456789101112131415161718192021222324252627282930var className = &quot;DTURLRequestOperation&quot;;var funcName = &quot;- rpcV1Sign:newSign:request: &quot;;var hook = eval(&apos;ObjC.classes.&apos; + className + &apos;[&quot;&apos; + funcName + &apos;&quot;]&apos;); var rpcV1SignAddr = hook.implementation;console.log(&apos;rpcV1SignAddr: &apos; + rpcV1SignAddr );/*var className2 = &quot;DTURLRequestOperation&quot;;var funcName2 = &quot;- avmpSign: &quot;;var hook2 = eval(&apos;ObjC.classes.&apos; + className2 + &apos;[&quot;&apos; + funcName2 + &apos;&quot;]&apos;); var avmpSignAddr = hook2.implementation;console.log(&apos;avmpSignAddr: &apos; + avmpSignAddr );*/#add的这个偏移是通过IDA的静态地址相减得到的var avmpSignAddr = rpcV1SignAddr.add(0x1DCE);console.log(&apos;avmpSignAddr: &apos; + avmpSignAddr);Interceptor.attach(avmpSignAddr, &#123; onEnter: function(args)&#123; console.log(&quot;onEnter&quot;); console.log(args[0]); console.log(args[1]); &#125;, onLeave: function(retval)&#123; console.log(&quot;onLeave&quot;); console.log(retval); &#125;&#125;);]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>逆向</tag>
+        <tag>Frida</tag>
+      </tags>
+  </entry>
+</search>

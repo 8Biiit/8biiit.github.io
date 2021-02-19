@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header.jpg?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header.jpg?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header.jpg?v=7.3.0">
+  <link rel="mask-icon" href="/images/header.jpg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="frida是一款基于python + java 的hook框架，可运行在Android、iOS、Linux、Windows、MAC OS X各平台，主要使用动态二进制插桩（dynamic binary instrumentation ,DBI）技术。 动态二进制插桩技术，可以在不影响程序动态执行结果的前提下，按照用户的分析需求，在程序执行过程中插入特定分析代码，实现对程序动态执行过程的监控与分析。">
+<meta name="keywords" content="逆向,Frida">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frida在iOS平台进行OC函数hook的常用方法">
+<meta property="og:url" content="http://8Biiit.github.io/2019/08/12/Frida/index.html">
+<meta property="og:site_name" content="8Biiit&#39;s Blog">
+<meta property="og:description" content="frida是一款基于python + java 的hook框架，可运行在Android、iOS、Linux、Windows、MAC OS X各平台，主要使用动态二进制插桩（dynamic binary instrumentation ,DBI）技术。 动态二进制插桩技术，可以在不影响程序动态执行结果的前提下，按照用户的分析需求，在程序执行过程中插入特定分析代码，实现对程序动态执行过程的监控与分析。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-16T10:06:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Frida在iOS平台进行OC函数hook的常用方法">
+<meta name="twitter:description" content="frida是一款基于python + java 的hook框架，可运行在Android、iOS、Linux、Windows、MAC OS X各平台，主要使用动态二进制插桩（dynamic binary instrumentation ,DBI）技术。 动态二进制插桩技术，可以在不影响程序动态执行结果的前提下，按照用户的分析需求，在程序执行过程中插入特定分析代码，实现对程序动态执行过程的监控与分析。">
+  <link rel="canonical" href="http://8Biiit.github.io/2019/08/12/Frida/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Frida在iOS平台进行OC函数hook的常用方法 | 8Biiit's Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">8Biiit's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">每天都在进步啊</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://8Biiit.github.io/2019/08/12/Frida/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="8Biiit">
+      <meta itemprop="description" content="Everything from life">
+      <meta itemprop="image" content="/images/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="8Biiit's Blog">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">Frida在iOS平台进行OC函数hook的常用方法
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-08-12 19:32:47" itemprop="dateCreated datePublished" datetime="2019-08-12T19:32:47+08:00">2019-08-12</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-08-16 18:06:12" itemprop="dateModified" datetime="2019-08-16T18:06:12+08:00">2019-08-16</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>frida是一款基于python + java 的hook框架，可运行在Android、iOS、Linux、Windows、MAC OS X各平台，主要使用动态二进制插桩（dynamic binary instrumentation ,DBI）技术。</p>
+<p>动态二进制插桩技术，可以在不影响程序动态执行结果的前提下，按照用户的分析需求，在程序执行过程中插入特定分析代码，实现对程序动态执行过程的监控与分析。目前，应用广泛的动态二进制分析平台有Pin，DynamoRIO和Frida等。</p>
+<p>这篇文章针对已经对Frida有过了解的初学者，对Frida的实际操作中常用方法进行总结。如果你还没有使用过Frida，可以先阅读Frida的<a href="https://www.frida.re/docs/home/" target="_blank" rel="noopener">官方文档</a>，里面很详细地说明了Frida的功能和使用方式。</p>
+<h1 id="Python脚本的撰写"><a href="#Python脚本的撰写" class="headerlink" title="Python脚本的撰写"></a>Python脚本的撰写</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">from __future__ import print_function</span><br><span class="line">import frida</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">#进程名</span><br><span class="line">process_name = &apos;myprocess&apos;</span><br><span class="line">#导入的js脚本</span><br><span class="line">js_file_name = &apos;myhookjs.js&apos;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 自定义回调函数</span><br><span class="line">数据通过send（message [，data]）传递给python的on_message（消息，数据）函数，其中我们前面已经介绍过了，</span><br><span class="line">第一个参数是一个python字典类型，其中的message[&apos;payload&apos;]存放的就是第一个参数内容</span><br><span class="line"></span><br><span class="line">def on_message(message, data):</span><br><span class="line">    if message[&apos;type&apos;] == &apos;send&apos;:</span><br><span class="line">        print(message[&apos;payload&apos;])</span><br><span class="line">    elif message[&apos;type&apos;] == &apos;error&apos;:</span><br><span class="line">        print(message[&apos;stack&apos;])</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line"># hook逻辑脚本</span><br><span class="line">def get_js_code():</span><br><span class="line">    js_file = open(js_file_name)  # type: BinaryIO</span><br><span class="line">    return js_file.read()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#start here</span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 注入进程,attach传入进程名称（字符串）或者进程号（整数）</span><br><span class="line">	process_id   =  0</span><br><span class="line">	device = frida.get_usb_device()</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"># 循环等待，根据进程名查找进程pid。找到执行hook</span><br><span class="line">	while True:</span><br><span class="line">		try:</span><br><span class="line">			process1 = device.get_process(process_name)</span><br><span class="line">			process_id = process1.pid</span><br><span class="line">      </span><br><span class="line">      #也可用</span><br><span class="line"> 			#pid = device.spawn([“com.android.chrome”])</span><br><span class="line">      </span><br><span class="line">			print(process_id)</span><br><span class="line">			break</span><br><span class="line">		except:</span><br><span class="line">			pass</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">	session = device.attach(process_id)</span><br><span class="line">  # 指定JavaScript脚本</span><br><span class="line">	#script = session.create_script(get_js_code()% int(sys.argv[1], 16)))</span><br><span class="line">  script = session.create_script(get_js_code())</span><br><span class="line">	script.on(&apos;message&apos;, on_message)    </span><br><span class="line">	script.load()</span><br><span class="line">  # 读取返回输入</span><br><span class="line">	sys.stdin.read()</span><br><span class="line">  </span><br><span class="line">  #int()函数把字符串表示的16进制数转换成整数</span><br><span class="line">	#上面的jscode % int(sys.argv[1], 16)是python格式化字符串的语法</span><br></pre></td></tr></table></figure>
+
+<h1 id="Frida-hook-Object-C"><a href="#Frida-hook-Object-C" class="headerlink" title="Frida hook Object-C"></a>Frida hook Object-C</h1><h2 id="attach方法"><a href="#attach方法" class="headerlink" title="attach方法"></a>attach方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">var className = &quot;className&quot;;</span><br><span class="line">var funcName = &quot;functionName&quot;;</span><br><span class="line">var hook = eval(&apos;ObjC.classes.&apos; + className + &apos;[&quot;&apos; + funcName + &apos;&quot;]&apos;);</span><br><span class="line"></span><br><span class="line">#Interceptor.attach(target, callbacks)</span><br><span class="line">#target是NativePointer指定要拦截调用的函数的地址</span><br><span class="line">#如果从Frida API获取地址（例如Module.getExportByName()），Frida将处理详细信息</span><br><span class="line"></span><br><span class="line">Interceptor.attach(hook.implementation,&#123;</span><br><span class="line"></span><br><span class="line">#回调函数给出一个参数  args，可用于读取或写入参数作为NativePointer对象数组</span><br><span class="line">		onEnter: function(args)</span><br><span class="line">		&#123;</span><br><span class="line"></span><br><span class="line">		&#125;,</span><br><span class="line">#给定一个参数的回调函数，该参数 retval是NativePointer包含原始返回值的衍生对象</span><br><span class="line">#请注意，此对象在onLeave调用中循环使用，因此请勿在回调之外存储和使用它。如果需要存储包含的值，请进行深层复制，例如：ptr(retval.toString())</span><br><span class="line">		onLeave: function(retval)</span><br><span class="line">		&#123;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看参数类型"><a href="#查看参数类型" class="headerlink" title="查看参数类型"></a>查看参数类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#objc的函数，第0个参数是id，第1个参数是SEL，真正的参数从args[2]开始</span><br><span class="line">console.log(&quot;Type of arg[2] -&gt; &quot; + new ObjC.Object(args[2]).$className)</span><br></pre></td></tr></table></figure>
+
+<h2 id="参数（返回值）NS与js类型转换"><a href="#参数（返回值）NS与js类型转换" class="headerlink" title="参数（返回值）NS与js类型转换"></a>参数（返回值）NS与js类型转换</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">#log String</span><br><span class="line">var myString = new ObjC.Object(args[2]);</span><br><span class="line">console.log(&quot;String argument: &quot; + myString.toString());</span><br><span class="line"></span><br><span class="line">#NSString(NCFString) to String </span><br><span class="line">  var NSString = new ObjC.Object(args[2]);</span><br><span class="line">  var str = NSString.UTF8String();</span><br><span class="line"></span><br><span class="line">#replace js String</span><br><span class="line">  str = str.replace(/BJP/,&quot;HZH&quot;);</span><br><span class="line">#log String</span><br><span class="line">  console.log(str);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#NSNumber to Int</span><br><span class="line">  var myNumber = args[3].toInt32();</span><br><span class="line">  console.log(myNumber);</span><br><span class="line">  </span><br><span class="line">#Converting NSData to String</span><br><span class="line">		var data = new ObjC.Object(args[2]);</span><br><span class="line">		var myString = data.bytes().readUtf8String(data.length());</span><br><span class="line">		console.log(myString);</span><br><span class="line"> #Converting NSData to Base64String   </span><br><span class="line">		var myString = new ObjC.Object(args[2]); var base = myString.base64EncodedStringWithOptions_(0)</span><br><span class="line">		console.log(&quot;String argument: &quot; + base);    </span><br><span class="line">    </span><br><span class="line">Tip: 2nd argument (number of bytes) is not required if the string data is null-terminated.</span><br><span class="line"></span><br><span class="line">#Converting NSData to Binary Data</span><br><span class="line">var data = new ObjC.Object(args[2]);</span><br><span class="line">data.bytes().readByteArray(data.length());</span><br></pre></td></tr></table></figure>
+
+<h2 id="替换参数"><a href="#替换参数" class="headerlink" title="替换参数"></a>替换参数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var str =&quot;hello&quot;;</span><br><span class="line">var newstring = ObjC.classes.NSString.stringWithString_(str);	</span><br><span class="line">args[2] =  newstring;</span><br></pre></td></tr></table></figure>
+
+<h2 id="替换返回值"><a href="#替换返回值" class="headerlink" title="替换返回值"></a>替换返回值</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#用整数1337替换返回值</span><br><span class="line">retval.replace(1337)</span><br><span class="line">#用指针替换</span><br><span class="line">retval.replace(ptr(&quot;0x1234&quot;))</span><br></pre></td></tr></table></figure>
+
+<h2 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var st = Memory.allocUtf8String(&quot;TESTMEPLZ!&quot;);</span><br><span class="line"></span><br><span class="line">#In NativeFunction param 2 is the return value type,</span><br><span class="line">#and param 3 is an array of input types</span><br><span class="line">var f = new NativeFunction(hook.implementation, &apos;pointer&apos;, [&apos;pointer&apos;,&apos;char&apos;,&apos;pointer&apos;]);</span><br><span class="line">#f(st,0,NSString1);</span><br></pre></td></tr></table></figure>
+
+<h2 id="通过一个函数获得其他函数地址进行hook"><a href="#通过一个函数获得其他函数地址进行hook" class="headerlink" title="通过一个函数获得其他函数地址进行hook"></a>通过一个函数获得其他函数地址进行hook</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">var className = &quot;DTURLRequestOperation&quot;;</span><br><span class="line">var funcName = &quot;- rpcV1Sign:newSign:request: &quot;;</span><br><span class="line">var hook = eval(&apos;ObjC.classes.&apos; + className + &apos;[&quot;&apos; + funcName + &apos;&quot;]&apos;);    </span><br><span class="line">var rpcV1SignAddr = hook.implementation;</span><br><span class="line">console.log(&apos;rpcV1SignAddr: &apos; + rpcV1SignAddr );</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/*</span><br><span class="line">var className2 = &quot;DTURLRequestOperation&quot;;</span><br><span class="line">var funcName2 = &quot;- avmpSign: &quot;;</span><br><span class="line">var hook2 = eval(&apos;ObjC.classes.&apos; + className2 + &apos;[&quot;&apos; + funcName2 + &apos;&quot;]&apos;);    </span><br><span class="line">var avmpSignAddr = hook2.implementation;</span><br><span class="line">console.log(&apos;avmpSignAddr: &apos; + avmpSignAddr );</span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">#add的这个偏移是通过IDA的静态地址相减得到的</span><br><span class="line">var avmpSignAddr = rpcV1SignAddr.add(0x1DCE);</span><br><span class="line">console.log(&apos;avmpSignAddr: &apos; + avmpSignAddr);</span><br><span class="line">Interceptor.attach(avmpSignAddr, &#123;</span><br><span class="line">    onEnter: function(args)&#123;</span><br><span class="line">    	console.log(&quot;onEnter&quot;);</span><br><span class="line">        console.log(args[0]);</span><br><span class="line">        console.log(args[1]);</span><br><span class="line">    &#125;,</span><br><span class="line">    onLeave: function(retval)&#123;</span><br><span class="line">    	console.log(&quot;onLeave&quot;);</span><br><span class="line">        console.log(retval);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+        <div id="reward-container">
+  <div>哥哥姐姐打发点咯~</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.jpg" alt="8Biiit 微信支付">
+        <p>微信支付</p>
+      </div>
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="8Biiit 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/逆向/" rel="tag"># 逆向</a>
+            
+              <a href="/tags/Frida/" rel="tag"># Frida</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/08/16/Apple-Opensource/" rel="prev" title="Apple Opensource 下载Apple开源项目">
+                  Apple Opensource 下载Apple开源项目 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/header.jpg"
+      alt="8Biiit">
+  <p class="site-author-name" itemprop="name">8Biiit</p>
+  <div class="site-description motion-element" itemprop="description">Everything from life</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/8biiit" title="GitHub &rarr; https://github.com/8biiit" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://weibo.com/u/3478929130" title="Weibo &rarr; https://weibo.com/u/3478929130" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+    
+  </div>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python脚本的撰写"><span class="nav-number">1.</span> <span class="nav-text">Python脚本的撰写</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Frida-hook-Object-C"><span class="nav-number">2.</span> <span class="nav-text">Frida hook Object-C</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#attach方法"><span class="nav-number">2.1.</span> <span class="nav-text">attach方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看参数类型"><span class="nav-number">2.2.</span> <span class="nav-text">查看参数类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数（返回值）NS与js类型转换"><span class="nav-number">2.3.</span> <span class="nav-text">参数（返回值）NS与js类型转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#替换参数"><span class="nav-number">2.4.</span> <span class="nav-text">替换参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#替换返回值"><span class="nav-number">2.5.</span> <span class="nav-text">替换返回值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调用函数"><span class="nav-number">2.6.</span> <span class="nav-text">调用函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过一个函数获得其他函数地址进行hook"><span class="nav-number">2.7.</span> <span class="nav-text">通过一个函数获得其他函数地址进行hook</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">8Biiit</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="总访客量">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="总访问量">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+    var gitalk = new Gitalk({
+      clientID: '8c5e1f409f422d4e10f6',
+      clientSecret: 'dd74067b3e311d6338eb117e3711361d6769df41',
+      repo: '8biiit.github.io',
+      owner: '8biiit',
+      admin: ['8biiit'],
+      id: '4bb700f76dd25638b2cee1c8f6836a9c',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>
