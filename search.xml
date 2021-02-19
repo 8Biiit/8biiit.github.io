@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[iOS虚拟定位]]></title>
-    <url>%2F2021%2F02%2F19%2FiOS%E8%99%9A%E6%8B%9F%E5%AE%9A%E4%BD%8D%2F</url>
-    <content type="text"><![CDATA[工具 iphone (iOS 14.1) lightning线 MAC电脑 准备工作 下载和iOS版本对应的Developer Disk Image 14.3-4.2 、14.3-11.3 安装libimobiledevice 使用 使用lightning线连接手机和电脑 运行ideviceimagemounter命令挂载Developer Disk Image 运行idevicesetlocation命令设置GPS坐标 使用完成后运行idevicesetlocation reset解除设置 12#exampleidevicesetlocation -- 32.036354 118.785575]]></content>
+    <title><![CDATA[使用yolo3-tf2训练自己的数据集]]></title>
+    <url>%2F2021%2F02%2F07%2F%E4%BD%BF%E7%94%A8yolo3-tf2%E8%AE%AD%E7%BB%83%E8%87%AA%E5%B7%B1%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86%2F</url>
+    <content type="text"><![CDATA[配置环境下载yolo工程yolov3-tf2地址：https://github.com/zzh8829/yolov3-tf2 12git clone https://github.com/zzh8829/yolov3-tf2 yolov3-tf2cd yolov3-tf2 建立conda环境1234567# Tensorflow CPUconda env create -f conda-cpu.ymlconda activate yolov3-tf2-cpu​# Tensorflow GPUconda env create -f conda-gpu.ymlconda activate yolov3-tf2-gpu 下载权重文件并验证123wget https://pjreddie.com/media/files/yolov3.weights -O data/yolov3.weightspython convert.pypython detect.py --image ./data/meme.jpg # Sanity check 制作VOC数据集目录： VOC Annotations #存放xml文件，可使用LabelImg生成 JPEGImages #存放图片 ImageSets Main test.txt train.txt trainval.txt val.txt 执行python make.py 在Main 下生成四个txt 123456789101112131415161718192021222324252627282930313233343536373839404142# -*- coding：utf-8 -*-​import os import random ​trainval_percent = 0.6 # 自己设定（训练集+验证集）所占（训练集+验证集+测试集）的比重 train_percent = 0.7 # 自己设定（训练集）所占（训练集+验证集）的比重xmlfilepath = &apos;Annotations&apos; #注意自己地址是否正确txtsavepath = &apos;ImageSets/Main&apos; #注意自己地址是否正确total_xml = os.listdir(xmlfilepath) ​num = len(total_xml) print(num)list = range(num) tv = int(num*trainval_percent) tr = int(tv*train_percent) trainval = random.sample(list,tv) train = random.sample(trainval,tr) ​ftrainval = open(&apos;ImageSets/Main/trainval.txt&apos;, &apos;w&apos;)ftest = open(&apos;ImageSets/Main/test.txt&apos;, &apos;w&apos;)ftrain = open(&apos;ImageSets/Main/train.txt&apos;, &apos;w&apos;)fval = open(&apos;ImageSets/Main/val.txt&apos;, &apos;w&apos;)​for i in list: name = total_xml[i][:-4]+&apos;\n&apos; #print(name) if i in trainval: ftrainval.write(name) if i in train: ftrain.write(name) else: fval.write(name) else: ftest.write(name) ​ftrainval.close() ftrain.close() fval.close() ftest.close()print(&apos;Done&apos;)​ 建立标签.names文件在data文件夹下，写入的就是自己要训练的类别 生成tfrecord文件训练集 12345python tools/voc2012.py \ --data_dir &apos;./data/voc-5h&apos; \ --split train \ --output_file ./data/voc5h_train.tfrecord \ --classes ./data/voc-5h.names 测试集 12345python tools/voc2012.py \ --data_dir &apos;./data/voc-5h&apos; \ --split val \ --output_file ./data/voc5h_val.tfrecord \ --classes ./data/voc-5h.names 训练进行迁移训练12345678910python train.py \ --dataset ./data/voc5h_train.tfrecord \ --val_dataset ./data/voc5h_val.tfrecord \ --classes ./data/voc-5h.names \ --num_classes 181 \ --mode fit --transfer darknet \ --batch_size 16 \ --epochs 10 \ --weights ./checkpoints/yolov3.tf \ --weights_num_classes 80 使用随机权重进行训练12345678python train.py \ --dataset ./data/voc5h_train.tfrecord \ --val_dataset ./data/voc5h_val.tfrecord \ --classes ./data/voc-5h.names \ --num_classes 181 \ --mode fit --transfer none \ --batch_size 16 \ --epochs 50 \ 模型测试从图像中检测12345python detect.py \ --classes ./data/voc-5h.names \ --num_classes 181 \ --weights ./checkpoints/yolov3_train_5.tf \ --image ./data/street.jpg 从验证集中检测12345python detect.py \ --classes ./data/voc-5h.names \ --num_classes 181 \ --weights ./checkpoints/yolov3_train_5.tf \ --tfrecord ./data/voc5h_val.tfrecord]]></content>
       <categories>
-        <category>iOS</category>
+        <category>CV</category>
       </categories>
       <tags>
-        <tag>iOS</tag>
-        <tag>Virtual Location</tag>
+        <tag>CV</tag>
+        <tag>yolo3</tag>
+        <tag>tensorflow</tag>
       </tags>
   </entry>
   <entry>
@@ -35,6 +36,18 @@
       <tags>
         <tag>Web</tag>
         <tag>Mac</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[iOS虚拟定位]]></title>
+    <url>%2F2020%2F12%2F07%2FiOS%E8%99%9A%E6%8B%9F%E5%AE%9A%E4%BD%8D%2F</url>
+    <content type="text"><![CDATA[工具 iphone (iOS 14.1) lightning线 MAC电脑 准备工作 下载和iOS版本对应的Developer Disk Image 14.3-4.2 、14.3-11.3 安装libimobiledevice 使用 使用lightning线连接手机和电脑 运行ideviceimagemounter命令挂载Developer Disk Image 运行idevicesetlocation命令设置GPS坐标 使用完成后运行idevicesetlocation reset解除设置 12#exampleidevicesetlocation -- 32.036354 118.785575]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>Virtual Location</tag>
       </tags>
   </entry>
   <entry>
