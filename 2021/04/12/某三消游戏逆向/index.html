@@ -55,19 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="问题表现形式登陆时输入正确的账户和密码，界面一直在loading状态，输入错误的密码会提示密码错误。与此同时，在网页上可以成功登陆苹果开发者网站，说明不是网络或与服务器连接上出现问题。 出现问题的原因在登陆app atore 或添加Xcode账户的时候，需要验证apple id。苹果在验证时会检查机器的smbios 信息，如果不是 mac 机器，就不让登录，虚拟机也不行。进入虚拟机后，点击左上角">
-<meta name="keywords" content="MacOS,Xcode,VirtualBox,黑苹果">
+  <meta name="description" content="文件分析确定分析对象解压apk安装包，进入./lib目录，都是.so的底层库。 1234567891011121314151617181920212223242526lib39285EFA.so   //移动安全联盟 OAID SDK 广告服务等           libsgcore.so   //快手libBugly.so      //腾讯Bugly crash监控     libhegam">
+<meta name="keywords" content="逆向,Android,lua">
 <meta property="og:type" content="article">
-<meta property="og:title" content="解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题">
-<meta property="og:url" content="http://8Biiit.github.io/2019/09/20/解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题/index.html">
+<meta property="og:title" content="某三消游戏逆向(1)——lua脚本解密">
+<meta property="og:url" content="http://8Biiit.github.io/2021/04/12/某三消游戏逆向/index.html">
 <meta property="og:site_name" content="8Biiit&#39;s Blog">
-<meta property="og:description" content="问题表现形式登陆时输入正确的账户和密码，界面一直在loading状态，输入错误的密码会提示密码错误。与此同时，在网页上可以成功登陆苹果开发者网站，说明不是网络或与服务器连接上出现问题。 出现问题的原因在登陆app atore 或添加Xcode账户的时候，需要验证apple id。苹果在验证时会检查机器的smbios 信息，如果不是 mac 机器，就不让登录，虚拟机也不行。进入虚拟机后，点击左上角">
+<meta property="og:description" content="文件分析确定分析对象解压apk安装包，进入./lib目录，都是.so的底层库。 1234567891011121314151617181920212223242526lib39285EFA.so   //移动安全联盟 OAID SDK 广告服务等           libsgcore.so   //快手libBugly.so      //腾讯Bugly crash监控     libhegam">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-20T11:53:29.000Z">
+<meta property="og:updated_time" content="2021-07-13T08:09:12.725Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题">
-<meta name="twitter:description" content="问题表现形式登陆时输入正确的账户和密码，界面一直在loading状态，输入错误的密码会提示密码错误。与此同时，在网页上可以成功登陆苹果开发者网站，说明不是网络或与服务器连接上出现问题。 出现问题的原因在登陆app atore 或添加Xcode账户的时候，需要验证apple id。苹果在验证时会检查机器的smbios 信息，如果不是 mac 机器，就不让登录，虚拟机也不行。进入虚拟机后，点击左上角">
-  <link rel="canonical" href="http://8Biiit.github.io/2019/09/20/解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题/">
+<meta name="twitter:title" content="某三消游戏逆向(1)——lua脚本解密">
+<meta name="twitter:description" content="文件分析确定分析对象解压apk安装包，进入./lib目录，都是.so的底层库。 1234567891011121314151617181920212223242526lib39285EFA.so   //移动安全联盟 OAID SDK 广告服务等           libsgcore.so   //快手libBugly.so      //腾讯Bugly crash监控     libhegam">
+  <link rel="canonical" href="http://8Biiit.github.io/2021/04/12/某三消游戏逆向/">
 
 
 <script id="page-configurations">
@@ -81,7 +81,7 @@
   };
 </script>
 
-  <title>解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题 | 8Biiit's Blog</title>
+  <title>某三消游戏逆向(1)——lua脚本解密 | 8Biiit's Blog</title>
   
 
 
@@ -258,7 +258,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://8Biiit.github.io/2019/09/20/解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题/">
+    <link itemprop="mainEntityOfPage" href="http://8Biiit.github.io/2021/04/12/某三消游戏逆向/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="8Biiit">
@@ -272,7 +272,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题
+          <h1 class="post-title" itemprop="name headline">某三消游戏逆向(1)——lua脚本解密
 
             
           </h1>
@@ -289,11 +289,19 @@
                 
               
 
-              <time title="创建时间：2019-09-20 19:24:08 / 修改时间：19:53:29" itemprop="dateCreated datePublished" datetime="2019-09-20T19:24:08+08:00">2019-09-20</time>
+              <time title="创建时间：2021-04-12 15:49:33" itemprop="dateCreated datePublished" datetime="2021-04-12T15:49:33+08:00">2021-04-12</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-13 16:09:12" itemprop="dateModified" datetime="2021-07-13T16:09:12+08:00">2021-07-13</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -302,7 +310,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MacOS/" itemprop="url" rel="index"><span itemprop="name">MacOS</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/逆向/" itemprop="url" rel="index"><span itemprop="name">逆向</span></a></span>
 
                 
                 
@@ -329,25 +337,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="问题表现形式"><a href="#问题表现形式" class="headerlink" title="问题表现形式"></a>问题表现形式</h2><p>登陆时输入正确的账户和密码，界面一直在loading状态，输入错误的密码会提示密码错误。<br>与此同时，在网页上可以成功登陆苹果开发者网站，说明不是网络或与服务器连接上出现问题。</p>
-<h2 id="出现问题的原因"><a href="#出现问题的原因" class="headerlink" title="出现问题的原因"></a>出现问题的原因</h2><p>在登陆app atore 或添加Xcode账户的时候，需要验证apple id。苹果在验证时会检查机器的smbios 信息，如果不是 mac 机器，就不让登录，虚拟机也不行。<br>进入虚拟机后，点击左上角-关于本机 可查看虚拟机固件情况。<br>如果是未经修饰的虚拟机，下面序列号等信息都为空</p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>在VirtualBox的配置文件中有“ExtraData”部分，可以通过修改配置文件的方法，伪造出虚假的smbios信息。</p>
-<h3 id="如何获得虚假的smbios信息"><a href="#如何获得虚假的smbios信息" class="headerlink" title="如何获得虚假的smbios信息"></a>如何获得虚假的smbios信息</h3><p>可以通过下载Chameleon-Wizard 软件或者Clover Configurator软件进行配置。<br>配置方法比较傻瓜，选一个想要的型号，就会自动生成。最后保存为一个plist文件，需要的信息都在里面。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;ExtraDataItem name=&quot;GUI/InformationWindowGeometry&quot; value=&quot;0,45,1440,800,max&quot;/&gt;</span><br><span class="line">&lt;ExtraDataItem name=&quot;GUI/LastCloseAction&quot; value=&quot;PowerOff&quot;/&gt;</span><br><span class="line">&lt;ExtraDataItem name=&quot;GUI/LastNormalWindowPosition&quot; value=&quot;623,199,512,405&quot;/&gt;</span><br><span class="line">&lt;ExtraDataItem name=&quot;GUI/LastScaleWindowPosition&quot; value=&quot;400,194,640,480&quot;/&gt;</span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBoardProduct&quot; value=&quot;Mac-06Fxxxx93F0323C5&quot;/&gt;</span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBoardSerial&quot; value=&quot;C025xxxx0CDGDQPCB&quot;/&gt;  </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemFamily&quot; value=&quot;MacBook Pro&quot;/&gt;         </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemProduct&quot; value=&quot;MacBookPro11,4&quot;/&gt;           </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemSerial&quot; value=&quot;C02PQ4ZBG8WL&quot;/&gt;</span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiSystemUuid&quot; value=&quot;CAFECAFE-xxxx-CAFE-CAFE-DECAFFDECAFF&quot;/&gt;           </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiOEMVBoxVer&quot; value=&quot;string:1&quot;/&gt;     </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiOEMVBoxRev=&quot; value=&quot;string:.23456&quot;/&gt;  </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBIOSVersion&quot; value=&quot;MBP114.88Z.F000.B00.1906140921&quot;/&gt;     </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/efi/0/Config/DmiBIOSReleaseDate=&quot; value=&quot;06/14/2019&quot;/&gt;            </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/smc/0/Config/DeviceKey&quot; value=&quot;ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc&quot;/&gt;</span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC&quot; value=&quot;1&quot;/&gt;     </span><br><span class="line">&lt;ExtraDataItem name=&quot;VBoxInternal2/SharedFoldersEnableSymlinksCreate/vagrant&quot; value=&quot;1&quot;/&gt;</span><br></pre></td></tr></table></figure>
+        <h1 id="文件分析"><a href="#文件分析" class="headerlink" title="文件分析"></a>文件分析</h1><h2 id="确定分析对象"><a href="#确定分析对象" class="headerlink" title="确定分析对象"></a>确定分析对象</h2><p>解压apk安装包，进入./lib目录，都是.so的底层库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">lib39285EFA.so   //移动安全联盟 OAID SDK 广告服务等           </span><br><span class="line">libsgcore.so   //快手</span><br><span class="line">libBugly.so      //腾讯Bugly crash监控     </span><br><span class="line">libhegame.so       //游戏逻辑 </span><br><span class="line">libtobEmbedEncrypt.so  //bytedance广告</span><br><span class="line">libCtaApiLib.so      //极光JVerification Android SDK    </span><br><span class="line">libtquic.so   //quic协议？</span><br><span class="line">libShanYCore.so //闪验Flutter</span><br><span class="line">libiconv.so      //多语言编码  </span><br><span class="line">libtraeimp-rtmp.so  //腾讯云移动直播</span><br><span class="line">libbuffer_pg.so     //字节</span><br><span class="line">libindoor.so  //百度室内定位       </span><br><span class="line">libtxffmpeg.so  //ffmpeg</span><br><span class="line">libc++_shared.so     </span><br><span class="line">libkwad_common.so    </span><br><span class="line">libtxplayer.so  //腾讯云短视频</span><br><span class="line">libcostquic.so    //quic协议？  </span><br><span class="line">libliteavsdk.so  //移动直播sdk    </span><br><span class="line">libtxsdl.so     //腾讯sdl？</span><br><span class="line">libfile_lock_pg.so    </span><br><span class="line">liblocSDK7b.so      //百度定位？</span><br><span class="line">libweibosdkcore.so   //微博</span><br><span class="line">libmarsstn.so     //微信Mars 跨平台基础架构组件   </span><br><span class="line">libzbarjni.so    //Zbar读取条码</span><br><span class="line">libmarsxlog.so  //微信Mars 跨平台基础架构组件 </span><br><span class="line">libnms.so   //对象检测</span><br></pre></td></tr></table></figure>
 
-<h3 id="通过配置命令修改信息"><a href="#通过配置命令修改信息" class="headerlink" title="通过配置命令修改信息"></a>通过配置命令修改信息</h3><p>cd至virtualbox目录下<br>执行 <code>VBoxManage setextradata &quot;OSName&quot; &quot;VBoxInternal/Devices/efi/0/Config/DmiSystemProduct&quot; &quot;MacBookPro11,3&quot;</code>  修改SystemProduct信息<br>其他信息类似</p>
-<p>在虚拟机已经建立后，这种方法不一定能够成功修改，慎用</p>
-<h3 id="通过脚本直接新建虚拟机，在脚本里写上配置参数"><a href="#通过脚本直接新建虚拟机，在脚本里写上配置参数" class="headerlink" title="通过脚本直接新建虚拟机，在脚本里写上配置参数"></a>通过脚本直接新建虚拟机，在脚本里写上配置参数</h3><p>此方法参考开源项目<a href="https://github.com/myspaghetti/macos-guest-virtualbox" target="_blank" rel="noopener">macos-guest-virtualbox</a></p>
-<p>具体步骤：</p>
-<ol>
-<li>将工程下载或pull到本地</li>
-<li>升级bash到bash4.0 参考<a href="https://8biiit.github.io/2019/09/20/Mac更新bash至4-0以上/">Mac更新bash至4-0以上</a></li>
-<li>安装依赖 bash  coreutils  wget  unzip  dmg2img</li>
-<li>按照前面生成的plist信息修改脚本文件</li>
-<li>cd 到目录下运行脚本 $ ./macos-guest-virtualbox.sh</li>
-<li>一路enter，选择一下os版本，然后看提示信息一路enter<br>最后虚拟机建立好后，可以看到虚拟机的信息已经跟真机类似了，而且跟我们配置的参数一样，后面xcode的账户果然也可以正常登录</li>
-</ol>
-<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><h3 id="vmware虚拟机相同问题"><a href="#vmware虚拟机相同问题" class="headerlink" title="vmware虚拟机相同问题"></a>vmware虚拟机相同问题</h3><p>同样的，如果vmware出现相同问题，也可以通过修改配置文件的方法解决，具体参考：<br><a href="https://www.insanelymac.com/forum/topic/292170-how-to-spoof-real-mac-in-vmware/?page=1" target="_blank" rel="noopener">https://www.insanelymac.com/forum/topic/292170-how-to-spoof-real-mac-in-vmware/?page=1</a><br><a href="https://www.insanelymac.com/forum/topic/309654-run-vanilla-os-x-el-capitan-sierra-high-sierra-or-mojave-in-virtualbox-5xx-on-a-windows-host/" target="_blank" rel="noopener">https://www.insanelymac.com/forum/topic/309654-run-vanilla-os-x-el-capitan-sierra-high-sierra-or-mojave-in-virtualbox-5xx-on-a-windows-host/</a></p>
+<p>用ida打开可疑的libhegame.so 看到函数的名字有大量的lua ，可以知道开心消消乐使用的lua引擎（和网上搜索得到的信息一致）<br>assert/src 目录下是lua脚本，有经过加密，需要对.so文件进行分析找到密钥。</p>
+<h2 id="分析libhegame-so"><a href="#分析libhegame-so" class="headerlink" title="分析libhegame.so"></a>分析libhegame.so</h2><p>方法名里搜索“lua”，可以看到都是jni的方法。</p>
+<p>查看<code>j_Java_com_happyelements_test_TestService_initLua</code> 方法，一路跟进<code>sub_6EA84</code>。</p>
+<p>可以看到初始化lua的方法应该是<code>com/happyelements/android/LuaHelper</code>类里的<code>initLuaEnv()</code>方法.</p>
+<p>全文搜索“load_lua”，可以看到方法<code>sub_106B0C()</code>,根据调试信息可以看出此方法为加载lua文件的地方。</p>
+<p>其中<code>sub_569864</code> 为读取lua文件，<code>sub_95C00</code> 为解码，<code>sub_97670</code>为解压缩</p>
+<p><code>sub_95C00 -&gt; sub_95C18</code>  从调试信息 推测<code>sub_95C18</code>为openssl的EVP解码算法。</p>
+<h1 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h1><h2 id="frida-hook-sub-95C00方法"><a href="#frida-hook-sub-95C00方法" class="headerlink" title="frida hook sub_95C00方法"></a>frida hook sub_95C00方法</h2><p>js脚本内容为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">function get_func_addr(module, offset) &#123;</span><br><span class="line"> </span><br><span class="line">   var base_addr = Module.findBaseAddress(module);</span><br><span class="line">   console.log(&quot;base_addr: &quot; + base_addr);</span><br><span class="line"> </span><br><span class="line">   console.log(hexdump(ptr(base_addr), &#123;</span><br><span class="line">            length: 16,</span><br><span class="line">            header: true,</span><br><span class="line">            ansi: true</span><br><span class="line">        &#125;))</span><br><span class="line"> </span><br><span class="line">   var func_addr = base_addr.add(offset);</span><br><span class="line">   if (Process.arch == &apos;arm&apos;)</span><br><span class="line">      return func_addr.add(1);  //如果是32位地址+1</span><br><span class="line">   else</span><br><span class="line">      return func_addr;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//var func_addr = get_func_addr(&apos;libhegame.so&apos;, 0x97670); </span><br><span class="line">var func_addr = get_func_addr(&apos;libhegame.so&apos;, 0x95C00); </span><br><span class="line">console.log(&apos;func_addr: &apos; + func_addr);</span><br><span class="line"> </span><br><span class="line">console.log(hexdump(ptr(func_addr), &#123;</span><br><span class="line">            length: 16,</span><br><span class="line">            header: true,</span><br><span class="line">            ansi: true</span><br><span class="line">        &#125;))</span><br><span class="line"> </span><br><span class="line">Interceptor.attach(ptr(func_addr), &#123;</span><br><span class="line">   onEnter: function(args) &#123;</span><br><span class="line"> </span><br><span class="line">      console.log(&quot;onEnter&quot;);</span><br><span class="line">      var num1 = args[0];</span><br><span class="line">      var num2 = args[1];</span><br><span class="line"> </span><br><span class="line">      console.log(&quot;num1: &quot; + num1);</span><br><span class="line">      console.log(&quot;num2: &quot; + num2);</span><br><span class="line"></span><br><span class="line">     console.log(hexdump(ptr(num1), &#123;</span><br><span class="line">        length: 16,</span><br><span class="line">        header: true,</span><br><span class="line">        ansi: true</span><br><span class="line">    &#125;))</span><br><span class="line"> </span><br><span class="line">   &#125;,</span><br><span class="line">   onLeave: function(retval) &#123;</span><br><span class="line"> </span><br><span class="line">      console.log(&quot;onLeave&quot;);</span><br><span class="line">      //retval.replace(3);  //返回值替换成3</span><br><span class="line">      console.log(&quot;return: &quot; + retval);</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到密钥为<code>e9 74 7d 92 cc 32 2e 7d 11 2e 7c 34 51 d7 b3 6a</code></p>
+<h2 id="解码lua文件"><a href="#解码lua文件" class="headerlink" title="解码lua文件"></a>解码lua文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#coding=UTF-8</span><br><span class="line">import Crypto</span><br><span class="line">import zlib</span><br><span class="line">from  Crypto.Cipher import AES</span><br><span class="line">def decdata(c):</span><br><span class="line">    key=b&apos;\xe9\x74\x7d\x92\xcc\x32\x2e\x7d\x11\x2e\x7c\x34\x51\xd7\xb3\x6a&apos;</span><br><span class="line">    iv=c[0:16]</span><br><span class="line">    main_data=c[16:]</span><br><span class="line">    cryptor = AES.new(key,AES.MODE_CBC,iv) </span><br><span class="line">    pad_compress_data=cryptor.decrypt(main_data)</span><br><span class="line">    str_len=len(pad_compress_data)</span><br><span class="line">    pad=pad_compress_data[-1]</span><br><span class="line">    compress_data=pad_compress_data[0:str_len-pad]</span><br><span class="line">    plain_text = zlib.decompress(compress_data)</span><br><span class="line">    return plain_text</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -386,13 +391,11 @@
           
           <div class="post-tags">
             
-              <a href="/tags/MacOS/" rel="tag"># MacOS</a>
+              <a href="/tags/逆向/" rel="tag"># 逆向</a>
             
-              <a href="/tags/Xcode/" rel="tag"># Xcode</a>
+              <a href="/tags/Android/" rel="tag"># Android</a>
             
-              <a href="/tags/VirtualBox/" rel="tag"># VirtualBox</a>
-            
-              <a href="/tags/黑苹果/" rel="tag"># 黑苹果</a>
+              <a href="/tags/lua/" rel="tag"># lua</a>
             
           </div>
         
@@ -402,8 +405,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/09/12/Xcode的各种坑/" rel="next" title="Xcode的各种坑">
-                  <i class="fa fa-chevron-left"></i> Xcode的各种坑
+                <a href="/2021/03/10/Mac10-14编译Lineage16-0-for-Xiaomi6-sagit/" rel="next" title="Mac10.14编译Lineage16.0 for Xiaomi6(sagit)">
+                  <i class="fa fa-chevron-left"></i> Mac10.14编译Lineage16.0 for Xiaomi6(sagit)
                 </a>
               
             </div>
@@ -411,10 +414,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/09/20/Mac更新bash至4-0以上/" rel="prev" title="Mac更新bash至4.0以上">
-                  Mac更新bash至4.0以上 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -620,7 +619,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题表现形式"><span class="nav-number">1.</span> <span class="nav-text">问题表现形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#出现问题的原因"><span class="nav-number">2.</span> <span class="nav-text">出现问题的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决办法"><span class="nav-number">3.</span> <span class="nav-text">解决办法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何获得虚假的smbios信息"><span class="nav-number">3.1.</span> <span class="nav-text">如何获得虚假的smbios信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过配置命令修改信息"><span class="nav-number">3.2.</span> <span class="nav-text">通过配置命令修改信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过脚本直接新建虚拟机，在脚本里写上配置参数"><span class="nav-number">3.3.</span> <span class="nav-text">通过脚本直接新建虚拟机，在脚本里写上配置参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他问题"><span class="nav-number">4.</span> <span class="nav-text">其他问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vmware虚拟机相同问题"><span class="nav-number">4.1.</span> <span class="nav-text">vmware虚拟机相同问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文件分析"><span class="nav-number">1.</span> <span class="nav-text">文件分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#确定分析对象"><span class="nav-number">1.1.</span> <span class="nav-text">确定分析对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析libhegame-so"><span class="nav-number">1.2.</span> <span class="nav-text">分析libhegame.so</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态调试"><span class="nav-number">2.</span> <span class="nav-text">动态调试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#frida-hook-sub-95C00方法"><span class="nav-number">2.1.</span> <span class="nav-text">frida hook sub_95C00方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解码lua文件"><span class="nav-number">2.2.</span> <span class="nav-text">解码lua文件</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -760,7 +759,7 @@
       repo: '8biiit.github.io',
       owner: '8biiit',
       admin: ['8biiit'],
-      id: '10a5793a683f346ca4855aff4877de04',
+      id: '068afdfd45c3edd389c8aabdcad70474',
         language: 'zh-CN',
       
       distractionFreeMode: 'true'
