@@ -4,6 +4,8 @@
     <title>Apple Opensource 下载Apple开源项目</title>
     <url>/2019/08/16/Apple-Opensource/</url>
     <content><![CDATA[<p>在学习OC的过程中，经常需要结合源码一起理解。Apple的很多项目会发布在<a href="https://opensource.apple.com/">Apple Open Source</a>上，比如macOS、Xcode、iOS等的各个release版本都能在上面找到。</p>
+<span id="more"></span>
+
 <p>这里示例Objective-C的源码获取方式：<br><a href="https://opensource.apple.com/source/objc4/">源码的在线浏览：</a><a href="https://opensource.apple.com/source/objc4/">https://opensource.apple.com/source/objc4/</a></p>
 <p><a href="https://opensource.apple.com/tarballs/objc4/">获取tar包：</a><a href="https://opensource.apple.com/tarballs/objc4/">https://opensource.apple.com/tarballs/objc4/</a></p>
 <p><a href="https://developer.apple.com/download/more/">开发工具的更多版本:</a><a href="https://developer.apple.com/download/more/">https://developer.apple.com/download/more/</a> </p>
@@ -21,7 +23,9 @@
   <entry>
     <title>Arm指令</title>
     <url>/2019/09/04/Arm%E6%8C%87%E4%BB%A4/</url>
-    <content><![CDATA[<h1 id="传输数据指令"><a href="#传输数据指令" class="headerlink" title="传输数据指令"></a>传输数据指令</h1><p>CPSR状态寄存器：</p>
+    <content><![CDATA[<p>指令集是CPU设计的灵魂，了解指令的作用对于逆向工作来说十分有益。</p>
+<span id="more"></span>
+<h1 id="传输数据指令"><a href="#传输数据指令" class="headerlink" title="传输数据指令"></a>传输数据指令</h1><p>CPSR状态寄存器：</p>
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
@@ -214,6 +218,8 @@
     <url>/2019/08/16/C:C++%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/</url>
     <content><![CDATA[<p>预处理指令是我们写在程序代码中的给预处理器(preprocessor)的命令，该指令将在编译器进行编译之前对源代码做某些转换。预处理指令以#号开头（# 号必须是该行除了任何空白字符外的第一个字符），#后是指令关键字，在关键字和# 号之间允许存在任意个数的空白字符，整行语句构成了一条预处理指令。</p>
 <p>使用预处理功能便于程序的修改、阅读、移植和调试，也便于实现模块化程序设计。</p>
+<span id="more"></span>
+
 <h1 id="常见的预处理指令"><a href="#常见的预处理指令" class="headerlink" title="常见的预处理指令"></a>常见的预处理指令</h1><table>
 <thead>
 <tr>
@@ -401,6 +407,8 @@
     <content><![CDATA[<p>frida是一款基于python + java 的hook框架，可运行在Android、iOS、Linux、Windows、MAC OS X各平台，主要使用动态二进制插桩（dynamic binary instrumentation ,DBI）技术。</p>
 <p>动态二进制插桩技术，可以在不影响程序动态执行结果的前提下，按照用户的分析需求，在程序执行过程中插入特定分析代码，实现对程序动态执行过程的监控与分析。目前，应用广泛的动态二进制分析平台有Pin，DynamoRIO和Frida等。</p>
 <p>这篇文章针对已经对Frida有过了解的初学者，对Frida的实际操作中常用方法进行总结。如果你还没有使用过Frida，可以先阅读Frida的<a href="https://www.frida.re/docs/home/">官方文档</a>，里面很详细地说明了Frida的功能和使用方式。</p>
+<span id="more"></span>
+
 <h1 id="Python脚本的撰写"><a href="#Python脚本的撰写" class="headerlink" title="Python脚本的撰写"></a>Python脚本的撰写</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from __future__ import print_function</span><br><span class="line">import frida</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">#进程名</span><br><span class="line">process_name = &#x27;myprocess&#x27;</span><br><span class="line">#导入的js脚本</span><br><span class="line">js_file_name = &#x27;myhookjs.js&#x27;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 自定义回调函数</span><br><span class="line">数据通过send（message [，data]）传递给python的on_message（消息，数据）函数，其中我们前面已经介绍过了，</span><br><span class="line">第一个参数是一个python字典类型，其中的message[&#x27;payload&#x27;]存放的就是第一个参数内容</span><br><span class="line"></span><br><span class="line">def on_message(message, data):</span><br><span class="line">    if message[&#x27;type&#x27;] == &#x27;send&#x27;:</span><br><span class="line">        print(message[&#x27;payload&#x27;])</span><br><span class="line">    elif message[&#x27;type&#x27;] == &#x27;error&#x27;:</span><br><span class="line">        print(message[&#x27;stack&#x27;])</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line"># hook逻辑脚本</span><br><span class="line">def get_js_code():</span><br><span class="line">    js_file = open(js_file_name)  # type: BinaryIO</span><br><span class="line">    return js_file.read()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#start here</span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 注入进程,attach传入进程名称（字符串）或者进程号（整数）</span><br><span class="line">	process_id   =  0</span><br><span class="line">	device = frida.get_usb_device()</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"># 循环等待，根据进程名查找进程pid。找到执行hook</span><br><span class="line">	while True:</span><br><span class="line">		try:</span><br><span class="line">			process1 = device.get_process(process_name)</span><br><span class="line">			process_id = process1.pid</span><br><span class="line">      </span><br><span class="line">      #也可用</span><br><span class="line"> 			#pid = device.spawn([“com.android.chrome”])</span><br><span class="line">      </span><br><span class="line">			print(process_id)</span><br><span class="line">			break</span><br><span class="line">		except:</span><br><span class="line">			pass</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">	session = device.attach(process_id)</span><br><span class="line">  # 指定JavaScript脚本</span><br><span class="line">	#script = session.create_script(get_js_code()% int(sys.argv[1], 16)))</span><br><span class="line">  script = session.create_script(get_js_code())</span><br><span class="line">	script.on(&#x27;message&#x27;, on_message)    </span><br><span class="line">	script.load()</span><br><span class="line">  # 读取返回输入</span><br><span class="line">	sys.stdin.read()</span><br><span class="line">  </span><br><span class="line">  #int()函数把字符串表示的16进制数转换成整数</span><br><span class="line">	#上面的jscode % int(sys.argv[1], 16)是python格式化字符串的语法</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h1 id="Frida-hook-Object-C"><a href="#Frida-hook-Object-C" class="headerlink" title="Frida hook Object-C"></a>Frida hook Object-C</h1><h2 id="attach方法"><a href="#attach方法" class="headerlink" title="attach方法"></a>attach方法</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">var className = &quot;className&quot;;</span><br><span class="line">var funcName = &quot;functionName&quot;;</span><br><span class="line">var hook = eval(&#x27;ObjC.classes.&#x27; + className + &#x27;[&quot;&#x27; + funcName + &#x27;&quot;]&#x27;);</span><br><span class="line"></span><br><span class="line">#Interceptor.attach(target, callbacks)</span><br><span class="line">#target是NativePointer指定要拦截调用的函数的地址</span><br><span class="line">#如果从Frida API获取地址（例如Module.getExportByName()），Frida将处理详细信息</span><br><span class="line"></span><br><span class="line">Interceptor.attach(hook.implementation,&#123;</span><br><span class="line"></span><br><span class="line">#回调函数给出一个参数  args，可用于读取或写入参数作为NativePointer对象数组</span><br><span class="line">		onEnter: function(args)</span><br><span class="line">		&#123;</span><br><span class="line"></span><br><span class="line">		&#125;,</span><br><span class="line">#给定一个参数的回调函数，该参数 retval是NativePointer包含原始返回值的衍生对象</span><br><span class="line">#请注意，此对象在onLeave调用中循环使用，因此请勿在回调之外存储和使用它。如果需要存储包含的值，请进行深层复制，例如：ptr(retval.toString())</span><br><span class="line">		onLeave: function(retval)</span><br><span class="line">		&#123;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="查看参数类型"><a href="#查看参数类型" class="headerlink" title="查看参数类型"></a>查看参数类型</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#objc的函数，第0个参数是id，第1个参数是SEL，真正的参数从args[2]开始</span><br><span class="line">console.log(&quot;Type of arg[2] -&gt; &quot; + new ObjC.Object(args[2]).$className)</span><br></pre></td></tr></table></figure>
@@ -424,6 +432,8 @@
     <title>Homebrew安装与使用</title>
     <url>/2019/08/19/Home-brew%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<p><a href="https://brew.sh/">Homebrew</a>是一款MacOS平台下自由及开放源代码的软件包管理系统，用以简化macOS系统上的软件安装过程。可以理解为MacOS版的yum或apt-get吧</p>
+<span id="more"></span>
+
 <h2 id="Homebrew安装"><a href="#Homebrew安装" class="headerlink" title="Homebrew安装"></a>Homebrew安装</h2><p>Homebrew是基于Ruby的，安装过程也非常很简单，只需执行：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</span><br></pre></td></tr></table></figure>
 <p>Homebrew安装成功后，会自动创建目录 /usr/local/Cellar 来存放Homebrew安装的程序，之后在终端就可以使用 brew 命令了。</p>
@@ -455,13 +465,15 @@
   <entry>
     <title>Hook技术的原理和实现</title>
     <url>/2019/09/12/Hook%E6%8A%80%E6%9C%AF%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E7%8E%B0/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<span id="more"></span>]]></content>
   </entry>
   <entry>
     <title>Mac10.14编译Lineage16.0 for Xiaomi6(sagit)</title>
     <url>/2021/03/10/Mac10-14%E7%BC%96%E8%AF%91Lineage16-0-for-Xiaomi6-sagit/</url>
     <content><![CDATA[<p>由于内网服务器各种不方便，最后选择购入1T的移动SSD在本地编译了。虚拟机的话需要本机至少24G内存，条件不满足；而且安卓代码对MAC的支持比较友好了，所以决定就在mac环境下编译啦</p>
 <p>lineage16.0不再支持小米6，因此换成17.1 ：<a href="https://www.lineageoslog.com/16.0/sagit">https://www.lineageoslog.com/16.0/sagit</a></p>
+<span id="more"></span>
+
 <h1 id="准备磁盘"><a href="#准备磁盘" class="headerlink" title="准备磁盘"></a>准备磁盘</h1><p>三星T5 SSD 使用MAC的磁盘工具重新挂载后抹除 ，使磁盘<font color="red">可写</font>，可<font color="red">区分大小写</font></p>
 <h1 id="repo工具下载及添加到环境变量"><a href="#repo工具下载及添加到环境变量" class="headerlink" title="repo工具下载及添加到环境变量"></a>repo工具下载及添加到环境变量</h1><p>使用<a href="https://mirrors.tuna.tsinghua.edu.cn/help/lineageOS/">清华的镜像源</a></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">​</span><br><span class="line">mkdir ~/bin</span><br><span class="line">​</span><br><span class="line">#本地下载repo，使用jumper的上传下到服务器上</span><br><span class="line">curl https://mirrors.tuna.tsinghua.edu.cn/git/git-repo &gt; /bin/repo/</span><br><span class="line">chmod a+x ~/bin/repo</span><br><span class="line">​</span><br><span class="line">export REPO_URL=&#x27;https://mirrors.tuna.tsinghua.edu.cn/git/git-repo/&#x27;</span><br><span class="line">export PATH=~/bin:$PATH</span><br></pre></td></tr></table></figure>
@@ -523,7 +535,10 @@
   <entry>
     <title>Mac下使用Charles进行HTTP/HTTPS抓包</title>
     <url>/2021/01/19/Mac%E4%B8%8B%E4%BD%BF%E7%94%A8Charles%E8%BF%9B%E8%A1%8CHTTP-HTTPS%E6%8A%93%E5%8C%85/</url>
-    <content><![CDATA[<h1 id="Charles安装与配置"><a href="#Charles安装与配置" class="headerlink" title="Charles安装与配置"></a>Charles安装与配置</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>最新的Charles工具，下载地址：<a href="https://www.charlesproxy.com/download/">https://www.charlesproxy.com/download/</a></p>
+    <content><![CDATA[<p>Charles是MacOS上的常用的抓包工具，常用于移动端的网络抓包分析。本文将介绍如何使用Charles对安卓/iOS设备的HTTP/HTTPS包进行抓取。</p>
+<span id="more"></span>
+
+<h1 id="Charles安装与配置"><a href="#Charles安装与配置" class="headerlink" title="Charles安装与配置"></a>Charles安装与配置</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>最新的Charles工具，下载地址：<a href="https://www.charlesproxy.com/download/">https://www.charlesproxy.com/download/</a></p>
 <h2 id="配置代理端口号"><a href="#配置代理端口号" class="headerlink" title="配置代理端口号"></a>配置代理端口号</h2><p>Proxy -&gt; Proxy Settings -&gt; Port，port可以随便指定，这里取8888</p>
 <h2 id="配置HTTPS证书"><a href="#配置HTTPS证书" class="headerlink" title="配置HTTPS证书"></a>配置HTTPS证书</h2><h3 id="添加SSL-Proxying"><a href="#添加SSL-Proxying" class="headerlink" title="添加SSL Proxying"></a>添加SSL Proxying</h3><p>Proxy -&gt; SSL Proxying Settings -&gt;勾选“Enable SSL Proxying”，并点击下方的Add，可以这样配置：</p>
 <h3 id="安装Charles证书到Mac"><a href="#安装Charles证书到Mac" class="headerlink" title="安装Charles证书到Mac"></a>安装Charles证书到Mac</h3><p>Help–&gt;SSL Proxying→Install Charles Root Certificate </p>
@@ -579,6 +594,8 @@
     <title>Mac更新bash至4.0以上</title>
     <url>/2019/09/20/Mac%E6%9B%B4%E6%96%B0bash%E8%87%B34-0%E4%BB%A5%E4%B8%8A/</url>
     <content><![CDATA[<p>Mac自带的bash为3.2版本，而最新的bash是5.0一上了。这导致bash无法支持新特性，而且执行脚本时也会提示bash要升级。</p>
+<span id="more"></span>
+
 <h3 id="升级方法"><a href="#升级方法" class="headerlink" title="升级方法"></a>升级方法</h3><p>查看bash版本<code> bash --version</code><br>执行<code>brew install bash</code></p>
 <p>此时，bash虽然安装了，但是/bin/bash的版本依然没有改变。<br>这是因为mac系统禁止更改系统目录的权限，引入sip机制，需要先关闭，修改，再打开这一系列操作</p>
 <h3 id="打开和关闭sip"><a href="#打开和关闭sip" class="headerlink" title="打开和关闭sip"></a>打开和关闭sip</h3><p>关闭sip</p>
@@ -603,7 +620,10 @@
   <entry>
     <title>Mac下编译V8</title>
     <url>/2020/07/15/Mac%E4%B8%8B%E7%BC%96%E8%AF%91V8/</url>
-    <content><![CDATA[<h1 id="下载V8源码"><a href="#下载V8源码" class="headerlink" title="下载V8源码"></a>下载V8源码</h1><p>参考<a href="https://v8.dev/docs/source-code#using-git">官方手册</a></p>
+    <content><![CDATA[<p>V8是一个由Google开发的开源JavaScript引擎，用于Google Chrome及Chromium中。由于需要使用到V8，来在自己的C++项目中执行js，因此想要学习了解下V8的实现原理。打算先在Mac本地上编译运行起来，之后再尝试交叉编译。</p>
+<span id="more"></span>
+
+<h1 id="下载V8源码"><a href="#下载V8源码" class="headerlink" title="下载V8源码"></a>下载V8源码</h1><p>参考<a href="https://v8.dev/docs/source-code#using-git">官方手册</a></p>
 <p>注意：不要直接从v8仓库使用git clone命令下载代码，这样下载下来的代码是无效的，会缺失很多东西，要使用官方提供的工具depot_tools</p>
 <h2 id="安装-depot-tools"><a href="#安装-depot-tools" class="headerlink" title="安装 depot_tools"></a>安装 depot_tools</h2><p>所需的 gn (配置生成工具) 和 nijia (构建工具) 都在这个仓库里。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Clone depot_tools 仓库 </span><br><span class="line">$ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git</span><br><span class="line"># 导出环境变量</span><br><span class="line">$ export PATH=&quot;$PATH:/path/to/depot_tools&quot;</span><br></pre></td></tr></table></figure>
@@ -677,6 +697,8 @@
     <title>Xcode的各种坑</title>
     <url>/2019/09/12/Xcode%E7%9A%84%E5%90%84%E7%A7%8D%E5%9D%91/</url>
     <content><![CDATA[<p>作为一个iOS萌新，使用Xcode的过程真是一言难尽，遇到各种奇怪的耽误事儿的问题。这里就占个楼专门总结使用中碰到的问题，以后遇到了也有的参考。</p>
+<span id="more"></span>
+
 <h2 id="什么？还需要开发者账号？"><a href="#什么？还需要开发者账号？" class="headerlink" title="什么？还需要开发者账号？"></a>什么？还需要开发者账号？</h2><p>第一次使用Xcode的时候，我以为它和VS、Eclipse什么的一样就是一个简单的开发环境。后来才知道苹果对开发者管控的很严格，开发者需要注册开发者账号才能具备签名打包工程，发布到Apple Store的资格。</p>
 <p>一般来说，开发者需要到<a href="https://developer.apple.com/">苹果开发者网站</a>注册开发者账号。<br>具体的流程为：</p>
 <ol>
@@ -692,6 +714,8 @@
 <h2 id="添加账号时一直loading转圈？"><a href="#添加账号时一直loading转圈？" class="headerlink" title="添加账号时一直loading转圈？"></a>添加账号时一直loading转圈？</h2><p>这个问题是最让我烦躁的，填了账户密码之后就一直转圈，一点反应没有。<br>有人说是因为验证的服务器有问题，不过我试了之后发现输了错误的密码之后是有错误提示的。说明验证是能验证的，应该是接下来的步骤卡死。<br>这个问题在某一天突然解决，又在某一天突然出现，毫无防备。</p>
 <p>如果在虚拟机上出现该问题，参考文章<a href="https://8biiit.github.io/2019/09/20/%E8%A7%A3%E5%86%B3Mac%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88VirtualBox%EF%BC%89%E6%97%A0%E6%B3%95%E7%99%BB%E9%99%86Xcode%E7%9A%84%E5%BC%80%E5%8F%91%E8%B4%A6%E5%8F%B7%E9%97%AE%E9%A2%98/">解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题</a></p>
 <h2 id="使用低版本SDK"><a href="#使用低版本SDK" class="headerlink" title="使用低版本SDK"></a>使用低版本SDK</h2><p>有时在开发中，我们升级Xcode为较高的版本，或者由于mac系统版本限制只能使用某个较高版本的Xcode，而可其支持的最低版本iOS SDK却比我们需要的版本高。<br>这时就需要将较低版本的SDK移过来。<br>首先，从旧版本Xcode中将SDK拷贝出来，路径为:<br><code>Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs</code><br>然后将其拷贝到新版本的对应位置<br>再打开<code>/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Info.plist</code>文件<br>改变MinimumSDKVersion的值，重启Xcode会识别大于等于MinimumSDKVersion的所有SDK</p>
+<h2 id="Xcode版本和Mac-OS版本的限制"><a href="#Xcode版本和Mac-OS版本的限制" class="headerlink" title="Xcode版本和Mac OS版本的限制"></a>Xcode版本和Mac OS版本的限制</h2><p>Xcode要求的最低Mac版本，以及对应的SDK、模拟器、swift版本<br>参考：<a href="https://developer.apple.com/cn/support/xcode/">Xcode Support</a></p>
+<h2 id="低版本Xcode不支持高版本iOS真机调试（14-0）"><a href="#低版本Xcode不支持高版本iOS真机调试（14-0）" class="headerlink" title="低版本Xcode不支持高版本iOS真机调试（14.0）"></a>低版本Xcode不支持高版本iOS真机调试（14.0）</h2><p>下载新版本的调试包，解压到以下路径：<br><code>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport</code></p>
 ]]></content>
       <categories>
         <category>iOS</category>
@@ -704,6 +728,8 @@
     <title>debugserver + lldb 动态调试</title>
     <url>/2019/08/16/debugserver-lldb-%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95/</url>
     <content><![CDATA[<h2 id="配置debugserver"><a href="#配置debugserver" class="headerlink" title="配置debugserver"></a>配置debugserver</h2><p>debugserver运行在的iOS上，顾名思义，它作为服务端，实际执行LLDB（作为客户端）传过来的命令，再把执行结果反馈给LLDB，显示给用户，即所谓的“远程调试”。在默认情况下，iOS设备上并没有安装debugserver，只有在设备连接过一次的Xcode，并在窗口→设备菜单中添加此设备后，debugserver才会被Xcode中安装到iOS版的“/开发人员的/ usr / bin中/”目录下。</p>
+<span id="more"></span>
+
 <h3 id="将debugserver从手机传到mac"><a href="#将debugserver从手机传到mac" class="headerlink" title="将debugserver从手机传到mac"></a>将debugserver从手机传到mac</h3><p>使用iproxy工具，将当前连接设备的22端口（SSH）映射到电脑的2222端口</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">iproxy 2222 22</span><br></pre></td></tr></table></figure>
 <p>SSH到usb设备上</p>
@@ -744,7 +770,10 @@
   <entry>
     <title>iOS应用ipa重签名</title>
     <url>/2019/08/21/iOS%E5%BA%94%E7%94%A8ipa%E9%87%8D%E7%AD%BE%E5%90%8D/</url>
-    <content><![CDATA[<h3 id="使用Xcode重签名"><a href="#使用Xcode重签名" class="headerlink" title="使用Xcode重签名"></a>使用Xcode重签名</h3><ol>
+    <content><![CDATA[<p>作为一项安全措施，Apple要求其信任的开发人员对在其设备上运行的所有代码进行数字签名。有时我们需要对第三方包进行修改后重新安装，因此需要进行重签名通过验证。</p>
+<span id="more"></span>
+
+<h3 id="使用Xcode重签名"><a href="#使用Xcode重签名" class="headerlink" title="使用Xcode重签名"></a>使用Xcode重签名</h3><ol>
 <li><p>新建一个工程编译</p>
 </li>
 <li><p>获得这个新工程的签名<br> 查看位置：product-&gt;app-&gt;在path中打开</p>
@@ -785,6 +814,8 @@
 <li>OpenSSH(Cydia) （在越狱手机的越狱市场下载，安装）</li>
 <li>Frida(Cydia) （在越狱手机的越狱市场下载，安装）</li>
 </ol>
+<span id="more"></span>
+
 <h2 id="重要步骤"><a href="#重要步骤" class="headerlink" title="重要步骤"></a>重要步骤</h2><h3 id="在APPStore中下载正版的应用到手机上"><a href="#在APPStore中下载正版的应用到手机上" class="headerlink" title="在APPStore中下载正版的应用到手机上"></a>在APPStore中下载正版的应用到手机上</h3><p>以下以搜狗输入法为例（手机ios10.3.3   型号iphone 5c）</p>
 <h3 id="ssh至手机，并查看路径"><a href="#ssh至手机，并查看路径" class="headerlink" title="ssh至手机，并查看路径"></a>ssh至手机，并查看路径</h3><p>转发手机22端口到主机2222端口 <code>iproxy 2222 22</code></p>
 <p>ssh至手机 <code>ssh -p2222 root@127.0.0.1</code></p>
@@ -819,7 +850,10 @@
   <entry>
     <title>iOS虚拟定位</title>
     <url>/2020/12/07/iOS%E8%99%9A%E6%8B%9F%E5%AE%9A%E4%BD%8D/</url>
-    <content><![CDATA[<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><ul>
+    <content><![CDATA[<p>虚拟定位指利用软硬件更改手机系统的定位数据，从而使目标app获取错误的定位信息。一般用于黑产、游戏外挂、社交软件打卡等。<br>这里提供一种简单的修改iOS设备定位的方法。</p>
+<span id="more"></span>
+
+<h1 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h1><ul>
 <li>iphone (iOS 14.1)</li>
 <li>lightning线</li>
 <li>MAC电脑</li>
@@ -847,6 +881,8 @@
     <title>theos安装、环境配置</title>
     <url>/2019/08/16/theos%E5%AE%89%E8%A3%85%E3%80%81%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<p><a href="https://github.com/theos/theos">Theos</a> 是一个越狱开发工具包，安装方法可以参考 <a href="https://github.com/theos/theos/wiki">Wiki</a>。</p>
+<span id="more"></span>
+
 <h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><h3 id="安装-dpkg"><a href="#安装-dpkg" class="headerlink" title="安装 dpkg"></a>安装 dpkg</h3><p>dpkg(Debian Packager) 是 Theos 依赖工具之一，可以使用 dpkg 制作 deb，Theos 开发的插件都会以 deb 的格式进行发布，在安装 Theos 之前需要安装 dpkg.</p>
 <p>安装借助于<a href="https://brew.sh/">Homebrew</a>安装，确保先安装 Homebrew。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">brew install dpkg</span><br></pre></td></tr></table></figure>
@@ -877,7 +913,10 @@
   <entry>
     <title>使用yolo3-tf2训练自己的数据集</title>
     <url>/2021/02/07/%E4%BD%BF%E7%94%A8yolo3-tf2%E8%AE%AD%E7%BB%83%E8%87%AA%E5%B7%B1%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86/</url>
-    <content><![CDATA[<h1 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h1><h2 id="下载yolo工程"><a href="#下载yolo工程" class="headerlink" title="下载yolo工程"></a>下载yolo工程</h2><p>yolov3-tf2地址：<a href="https://github.com/zzh8829/yolov3-tf2">https://github.com/zzh8829/yolov3-tf2</a></p>
+    <content><![CDATA[<p>You only look once (YOLO) 是一个实时目标检测模型。YOLO3在保持速度优势的前提下，提升了预测精度，尤其是加强了对小物体的识别能力。<br>本文将介绍如何使用yolo3 + tensorflow2.x训练自己的数据集。</p>
+<span id="more"></span>
+
+<h1 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h1><h2 id="下载yolo工程"><a href="#下载yolo工程" class="headerlink" title="下载yolo工程"></a>下载yolo工程</h2><p>yolov3-tf2地址：<a href="https://github.com/zzh8829/yolov3-tf2">https://github.com/zzh8829/yolov3-tf2</a></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone  https://github.com/zzh8829/yolov3-tf2 yolov3-tf2</span><br><span class="line">cd yolov3-tf2</span><br></pre></td></tr></table></figure>
 
 <h2 id="建立conda环境"><a href="#建立conda环境" class="headerlink" title="建立conda环境"></a>建立conda环境</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Tensorflow CPU</span><br><span class="line">conda env create -f conda-cpu.yml</span><br><span class="line">conda activate yolov3-tf2-cpu</span><br><span class="line">​</span><br><span class="line"># Tensorflow GPU</span><br><span class="line">conda env create -f conda-gpu.yml</span><br><span class="line">conda activate yolov3-tf2-gpu</span><br></pre></td></tr></table></figure>
@@ -930,7 +969,10 @@
   <entry>
     <title>图片处理</title>
     <url>/2021/01/29/%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[<h1 id="OpenCV-Python方法"><a href="#OpenCV-Python方法" class="headerlink" title="OpenCV-Python方法"></a>OpenCV-Python方法</h1><p>教程：<a href="https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html">https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html</a></p>
+    <content><![CDATA[<p>图片的预处理在机器学习中是一个重要且有效的步骤，可以使图片转换成适应模型的格式，也可进行数据增强和数据归一化等。<br>本文将对常用的图片处理方法进行归纳。</p>
+<span id="more"></span>
+
+<h1 id="OpenCV-Python方法"><a href="#OpenCV-Python方法" class="headerlink" title="OpenCV-Python方法"></a>OpenCV-Python方法</h1><p>教程：<a href="https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html">https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html</a></p>
 <p>opencv以BGR模式加载图片。</p>
 <p>使用需 <code>import cv2</code></p>
 <h2 id="读写展示图片"><a href="#读写展示图片" class="headerlink" title="读写展示图片"></a>读写展示图片</h2><h3 id="读本地图片"><a href="#读本地图片" class="headerlink" title="读本地图片"></a>读本地图片</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cv2.imread(filepath,flags)</span><br><span class="line">​</span><br><span class="line">#参数一：工作路径or完整路径  参数二：读取这幅图片方式，可省略</span><br><span class="line">#参数二：</span><br><span class="line">#cv2.IMREAD_COLOR：默认参数，读入一副彩色图片，忽略alpha通道，实际取值为1</span><br><span class="line">#cv2.IMREAD_GRAYSCALE：读入灰度图片，实际取值为0</span><br><span class="line">#cv2.IMREAD_UNCHANGED：顾名思义，读入完整图片，包括alpha通道</span><br><span class="line">​</span><br><span class="line">exp:</span><br><span class="line">#读取工作路径下彩色图片</span><br><span class="line">cv2.imread(&quot;1.jpg&quot;)</span><br><span class="line">​</span><br><span class="line">#读取完整路径下灰度图片</span><br><span class="line">cv2.imread(&quot;/Users/mabelguo/1.jpg&quot;,0)</span><br></pre></td></tr></table></figure>
@@ -977,7 +1019,9 @@
   <entry>
     <title>小米6刷Magisk全流程</title>
     <url>/2020/05/29/%E5%B0%8F%E7%B1%B36%E5%88%B7Magisk%E5%85%A8%E6%B5%81%E7%A8%8B/</url>
-    <content><![CDATA[<h1 id="解锁bootloader"><a href="#解锁bootloader" class="headerlink" title="解锁bootloader"></a>解锁bootloader</h1><p>需要：sim卡 ，<a href="http://www.miui.com/unlock/download.html">mi手机解锁工具</a></p>
+    <content><![CDATA[<p><a href="https://github.com/topjohnwu/Magisk">Magisk</a>是一款开源安卓定制工具，支持 Android 5.0以上的操作系统。 </p>
+<span id="more"></span>
+<h1 id="解锁bootloader"><a href="#解锁bootloader" class="headerlink" title="解锁bootloader"></a>解锁bootloader</h1><p>需要：sim卡 ，<a href="http://www.miui.com/unlock/download.html">mi手机解锁工具</a></p>
 <p>首先手机进入开发者模式（miui版本连击7次），进入解锁状态(需要sim卡联网)</p>
 <p>绑定小米账号和设备(需验证码)，申请解锁设备</p>
 <p>windows下载并运行mi手机解锁工具，登录小米账号</p>
@@ -1016,7 +1060,8 @@
   <entry>
     <title>某三消游戏逆向(1)——lua脚本解密</title>
     <url>/2021/04/12/%E6%9F%90%E4%B8%89%E6%B6%88%E6%B8%B8%E6%88%8F%E9%80%86%E5%90%91/</url>
-    <content><![CDATA[<h1 id="文件分析"><a href="#文件分析" class="headerlink" title="文件分析"></a>文件分析</h1><h2 id="确定分析对象"><a href="#确定分析对象" class="headerlink" title="确定分析对象"></a>确定分析对象</h2><p>解压apk安装包，进入./lib目录，都是.so的底层库。</p>
+    <content><![CDATA[<p>目前手游游戏所用的引擎，常见的框架有cocos2d，Unity3d，unrealengine等。Lua由于其简单的语言结构和语法，用于很多游戏引擎。<br>这次以某常见三消游戏为例，来进行逆向工作。</p>
+<h1 id="文件分析"><a href="#文件分析" class="headerlink" title="文件分析"></a>文件分析</h1><h2 id="确定分析对象"><a href="#确定分析对象" class="headerlink" title="确定分析对象"></a>确定分析对象</h2><p>解压apk安装包，进入./lib目录，都是.so的底层库。</p>
 <span id="more"></span>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lib39285EFA.so   //移动安全联盟 OAID SDK 广告服务等           </span><br><span class="line">libsgcore.so   //快手</span><br><span class="line">libBugly.so      //腾讯Bugly crash监控     </span><br><span class="line">libhegame.so       //游戏逻辑 </span><br><span class="line">libtobEmbedEncrypt.so  //bytedance广告</span><br><span class="line">libCtaApiLib.so      //极光JVerification Android SDK    </span><br><span class="line">libtquic.so   //quic协议？</span><br><span class="line">libShanYCore.so //闪验Flutter</span><br><span class="line">libiconv.so      //多语言编码  </span><br><span class="line">libtraeimp-rtmp.so  //腾讯云移动直播</span><br><span class="line">libbuffer_pg.so     //字节</span><br><span class="line">libindoor.so  //百度室内定位       </span><br><span class="line">libtxffmpeg.so  //ffmpeg</span><br><span class="line">libc++_shared.so     </span><br><span class="line">libkwad_common.so    </span><br><span class="line">libtxplayer.so  //腾讯云短视频</span><br><span class="line">libcostquic.so    //quic协议？  </span><br><span class="line">libliteavsdk.so  //移动直播sdk    </span><br><span class="line">libtxsdl.so     //腾讯sdl？</span><br><span class="line">libfile_lock_pg.so    </span><br><span class="line">liblocSDK7b.so      //百度定位？</span><br><span class="line">libweibosdkcore.so   //微博</span><br><span class="line">libmarsstn.so     //微信Mars 跨平台基础架构组件   </span><br><span class="line">libzbarjni.so    //Zbar读取条码</span><br><span class="line">libmarsxlog.so  //微信Mars 跨平台基础架构组件 </span><br><span class="line">libnms.so   //对象检测</span><br></pre></td></tr></table></figure>
 <p>用ida打开可疑的libhegame.so 看到函数的名字有大量的lua ，可以知道开心消消乐使用的lua引擎（和网上搜索得到的信息一致）<br>assert/src 目录下是lua脚本，有经过加密，需要对.so文件进行分析找到密钥。</p>
@@ -1045,6 +1090,8 @@
     <title>解决Mac虚拟机（VirtualBox）无法登陆Xcode的开发账号问题</title>
     <url>/2019/09/20/%E8%A7%A3%E5%86%B3Mac%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88VirtualBox%EF%BC%89%E6%97%A0%E6%B3%95%E7%99%BB%E9%99%86Xcode%E7%9A%84%E5%BC%80%E5%8F%91%E8%B4%A6%E5%8F%B7%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="问题表现形式"><a href="#问题表现形式" class="headerlink" title="问题表现形式"></a>问题表现形式</h2><p>登陆时输入正确的账户和密码，界面一直在loading状态，输入错误的密码会提示密码错误。<br>与此同时，在网页上可以成功登陆苹果开发者网站，说明不是网络或与服务器连接上出现问题。</p>
+<span id="more"></span>
+
 <h2 id="出现问题的原因"><a href="#出现问题的原因" class="headerlink" title="出现问题的原因"></a>出现问题的原因</h2><p>在登陆app atore 或添加Xcode账户的时候，需要验证apple id。苹果在验证时会检查机器的smbios 信息，如果不是 mac 机器，就不让登录，虚拟机也不行。<br>进入虚拟机后，点击左上角-关于本机 可查看虚拟机固件情况。<br>如果是未经修饰的虚拟机，下面序列号等信息都为空</p>
 <h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>在VirtualBox的配置文件中有“ExtraData”部分，可以通过修改配置文件的方法，伪造出虚假的smbios信息。</p>
 <h3 id="如何获得虚假的smbios信息"><a href="#如何获得虚假的smbios信息" class="headerlink" title="如何获得虚假的smbios信息"></a>如何获得虚假的smbios信息</h3><p>可以通过下载Chameleon-Wizard 软件或者Clover Configurator软件进行配置。<br>配置方法比较傻瓜，选一个想要的型号，就会自动生成。最后保存为一个plist文件，需要的信息都在里面。</p>
@@ -1077,6 +1124,8 @@
     <title>解决mac上使用VirtualBox建立mac虚拟机分辨率问题</title>
     <url>/2019/08/21/%E8%A7%A3%E5%86%B3mac%E4%B8%8A%E4%BD%BF%E7%94%A8VirtualBox%E5%BB%BA%E7%AB%8Bmac%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%86%E8%BE%A8%E7%8E%87%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<p>mac主机使用virtualbox安装mac虚拟机经常出现分辨率问题，虚拟机 关于本机-&gt;显示器 里可查看可用的分辨率选项很低。<br>那么如何将虚拟机的分辨率调整至1920x1080,或是2880x1800呢？</p>
+<span id="more"></span>
+
 <p>首先将VirtualBox全部关闭<br>终端进入VirtualBox.app路径下<br>执行以下命令：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">VBoxManage setextradata &quot;mac10.10.5&quot; CustomVideoMode1 2880x1800x32  #数组间的符号为小写字母x, 下同</span><br><span class="line">VBoxManage setextradata &quot;mac10.10.5&quot; VBoxInternal2/EfiGraphicsResolution 2880x1800</span><br></pre></td></tr></table></figure>
 <p>引号内为虚拟机名称，可通过<code>VBoxManage list -s vms</code>命令查看</p>
@@ -1093,6 +1142,8 @@
     <title>Mach-O文件详解</title>
     <url>/2019/08/09/Mach-O%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[<h1 id="Mach-O是什么"><a href="#Mach-O是什么" class="headerlink" title="Mach-O是什么"></a>Mach-O是什么</h1><p>Mach-O 是 Mach object 文件格式的缩写，它是一种用于记录可执行文件、对象代码、共享库、动态加载代码和内存转储的文件格式。类似于windows上的PE文件以及linux上的ELF文件。作为 a.out 格式的替代品，Mach-O提供更多的可扩展性和更快的符号表信息存取。大多数基于 Mach 内核的操作系统都使用 Mach-O。NeXTSTEP、OS X 和 iOS 是使用这种格式作为本地可执行文件、库和对象代码的例子。</p>
+<span id="more"></span>
+
 <p>Mach-O文件包含固定大小的头部(Header),几个可变大小的加载命令(LoadCommands)，一个或多个代码段(Segment)，每个代码段可以包含一个或多个代码区(Section)。</p>
 <h1 id="胖二进制文件"><a href="#胖二进制文件" class="headerlink" title="胖二进制文件"></a>胖二进制文件</h1><p>为了使文件能运行在多个平台，出现了胖二进制文件(Fat Binary)，又叫通用二进制文件(Universal Binary)。使用lipo命令可以列出胖文件中的体系结构类型。胖二进制文件实际上是一个包装器(Wrapper)，一种将用于多种体系结构的Mach-O文件连接起来的简单存档。</p>
 <p>胖二进制文件由胖头部(Fat Header)以及后面的 Mach-O 文件组成。胖头部包含一个幻数，后接一个整数值，表示二进制文件驻留在胖文件中的体系结构数量。</p>
