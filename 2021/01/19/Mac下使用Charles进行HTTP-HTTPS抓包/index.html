@@ -1,332 +1,277 @@
 <!DOCTYPE html>
-
-
-
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-<meta name="generator" content="Hexo 3.9.0">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="viewport" content="width=device-width">
 <meta name="theme-color" content="#222">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/header.jpg?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/header.jpg?v=7.3.0">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/header.jpg?v=7.3.0">
-  <link rel="mask-icon" href="/images/header.jpg?v=7.3.0" color="#222">
-
-<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+<meta name="generator" content="Hexo 5.4.0">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header.jpg">
+  <link rel="mask-icon" href="/images/header.jpg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-<script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '7.3.0',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    save_scroll: false,
-    copycode: {"enable":false,"show_result":false,"style":null},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: '复制',
-      copy_success: '复制成功',
-      copy_failure: '复制失败'
-    }
-  };
-</script>
 
-  <meta name="description" content="Charles安装与配置下载最新的Charles工具，下载地址：https://www.charlesproxy.com/download/ 配置代理端口号Proxy -&amp;gt; Proxy Settings -&amp;gt; Port，port可以随便指定，这里取8888 配置HTTPS证书添加SSL ProxyingProxy -&amp;gt; SSL Proxying Settings -&amp;gt;勾选“">
-<meta name="keywords" content="Web,Mac">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"8biiit.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2}},"activeClass":"gitalk"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="Charles安装与配置下载最新的Charles工具，下载地址：https:&#x2F;&#x2F;www.charlesproxy.com&#x2F;download&#x2F; 配置代理端口号Proxy -&gt; Proxy Settings -&gt; Port，port可以随便指定，这里取8888 配置HTTPS证书添加SSL ProxyingProxy -&gt; SSL Proxying Settings -&gt;勾选“">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mac下使用Charles进行HTTP&#x2F;HTTPS抓包">
-<meta property="og:url" content="http://8Biiit.github.io/2021/01/19/Mac下使用Charles进行HTTP-HTTPS抓包/index.html">
+<meta property="og:url" content="http://8biiit.github.io/2021/01/19/Mac%E4%B8%8B%E4%BD%BF%E7%94%A8Charles%E8%BF%9B%E8%A1%8CHTTP-HTTPS%E6%8A%93%E5%8C%85/index.html">
 <meta property="og:site_name" content="8Biiit&#39;s Blog">
-<meta property="og:description" content="Charles安装与配置下载最新的Charles工具，下载地址：https://www.charlesproxy.com/download/ 配置代理端口号Proxy -&amp;gt; Proxy Settings -&amp;gt; Port，port可以随便指定，这里取8888 配置HTTPS证书添加SSL ProxyingProxy -&amp;gt; SSL Proxying Settings -&amp;gt;勾选“">
-<meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-02-19T03:24:32.026Z">
+<meta property="og:description" content="Charles安装与配置下载最新的Charles工具，下载地址：https:&#x2F;&#x2F;www.charlesproxy.com&#x2F;download&#x2F; 配置代理端口号Proxy -&gt; Proxy Settings -&gt; Port，port可以随便指定，这里取8888 配置HTTPS证书添加SSL ProxyingProxy -&gt; SSL Proxying Settings -&gt;勾选“">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-19T03:01:20.000Z">
+<meta property="article:modified_time" content="2021-02-19T03:24:32.026Z">
+<meta property="article:author" content="8Biiit">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="Mac">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mac下使用Charles进行HTTP&#x2F;HTTPS抓包">
-<meta name="twitter:description" content="Charles安装与配置下载最新的Charles工具，下载地址：https://www.charlesproxy.com/download/ 配置代理端口号Proxy -&amp;gt; Proxy Settings -&amp;gt; Port，port可以随便指定，这里取8888 配置HTTPS证书添加SSL ProxyingProxy -&amp;gt; SSL Proxying Settings -&amp;gt;勾选“">
-  <link rel="canonical" href="http://8Biiit.github.io/2021/01/19/Mac下使用Charles进行HTTP-HTTPS抓包/">
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
-  };
-</script>
+<link rel="canonical" href="http://8biiit.github.io/2021/01/19/Mac%E4%B8%8B%E4%BD%BF%E7%94%A8Charles%E8%BF%9B%E8%A1%8CHTTP-HTTPS%E6%8A%93%E5%8C%85/">
 
-  <title>Mac下使用Charles进行HTTP/HTTPS抓包 | 8Biiit's Blog</title>
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://8biiit.github.io/2021/01/19/Mac%E4%B8%8B%E4%BD%BF%E7%94%A8Charles%E8%BF%9B%E8%A1%8CHTTP-HTTPS%E6%8A%93%E5%8C%85/","path":"2021/01/19/Mac下使用Charles进行HTTP-HTTPS抓包/","title":"Mac下使用Charles进行HTTP/HTTPS抓包"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Mac下使用Charles进行HTTP/HTTPS抓包 | 8Biiit's Blog</title>
   
-
-
-
-
 
 
 
 
   <noscript>
-  <style>
-  .use-motion .motion-element,
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
-
-  .use-motion .logo,
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-  <div class="container sidebar-position-left">
-    <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta">
 
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">8Biiit's Blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">不抵抗，也不停止飞行</p>
-      
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">8Biiit's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">不抵抗，也不停止飞行</p>
+      <img class="custom-logo-image" src="/images/header.jpg" alt="8Biiit's Blog">
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="切换导航栏">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
   </div>
 </div>
+
 
 
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-      
-      
-      
-        
-        <li class="menu-item menu-item-home">
-      
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
-
-  </li>
-      
-      
-      
-        
-        <li class="menu-item menu-item-about">
-      
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
-
-  </li>
-      
-      
-      
-        
-        <li class="menu-item menu-item-tags">
-      
-    
-
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
-
-  </li>
-      
-      
-      
-        
-        <li class="menu-item menu-item-categories">
-      
-    
-
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
-
-  </li>
-      
-      
-      
-        
-        <li class="menu-item menu-item-archives">
-      
-    
-
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
-
-  </li>
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
       <li class="menu-item menu-item-search">
-        <a href="javascript:;" class="popup-trigger">
-        
-          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
       </li>
-    
   </ul>
-
 </nav>
-  <div class="site-search">
-    
-  <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon">
-      <i class="fa fa-search"></i>
-    </span>
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-    <div class="local-search-input-wrapper">
-      <input autocomplete="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
     </div>
   </div>
-  <div id="local-search-result"></div>
+
 </div>
-
-
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
   </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Charles%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">Charles安装与配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E7%AB%AF%E5%8F%A3%E5%8F%B7"><span class="nav-number">1.2.</span> <span class="nav-text">配置代理端口号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEHTTPS%E8%AF%81%E4%B9%A6"><span class="nav-number">1.3.</span> <span class="nav-text">配置HTTPS证书</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0SSL-Proxying"><span class="nav-number">1.3.1.</span> <span class="nav-text">添加SSL Proxying</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Charles%E8%AF%81%E4%B9%A6%E5%88%B0Mac"><span class="nav-number">1.3.2.</span> <span class="nav-text">安装Charles证书到Mac</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Android 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">Android代理设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-7-0-%E4%BB%A5%E4%B8%8B%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">Android 7.0 以下设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-7-0-%E4%BB%A5%E4%B8%8A%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">Android 7.0 以上设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%B0%86%E8%AF%81%E4%B9%A6%E6%8F%90%E5%8D%87%E4%B8%BA%E7%B3%BB%E7%BB%9F%E8%AF%81%E4%B9%A6"><span class="nav-number">2.3.1.</span> <span class="nav-text">方法一：将证书提升为系统证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%88%A9%E7%94%A8VirtualXposed"><span class="nav-number">2.3.2.</span> <span class="nav-text">方法二：利用VirtualXposed</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS-%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">iOS 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#iPhone%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.1.</span> <span class="nav-text">iPhone代理设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iPhone%E8%AF%81%E4%B9%A6%E5%AE%89%E8%A3%85"><span class="nav-number">3.2.</span> <span class="nav-text">iPhone证书安装</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">8Biiit</p>
+  <div class="site-description" itemprop="description">Everything from life</div>
 </div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/8biiit" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;8biiit" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
     </header>
 
     
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-            
+    <div class="main-inner post posts-expand">
 
-          <div id="content" class="content page-post-detail">
-            
 
-  <div id="posts" class="posts-expand">
-    
+  
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+
+<div class="post-block">
   
   
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://8Biiit.github.io/2021/01/19/Mac下使用Charles进行HTTP-HTTPS抓包/">
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://8biiit.github.io/2021/01/19/Mac%E4%B8%8B%E4%BD%BF%E7%94%A8Charles%E8%BF%9B%E8%A1%8CHTTP-HTTPS%E6%8A%93%E5%8C%85/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="8Biiit">
       <meta itemprop="description" content="Everything from life">
-      <meta itemprop="image" content="/images/header.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="8Biiit's Blog">
     </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mac下使用Charles进行HTTP/HTTPS抓包
+        </h1>
 
-        
-          <h1 class="post-title" itemprop="name headline">Mac下使用Charles进行HTTP/HTTPS抓包
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-            
-          </h1>
-        
+      <time title="创建时间：2021-01-19 11:01:20" itemprop="dateCreated datePublished" datetime="2021-01-19T11:01:20+08:00">2021-01-19</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-02-19 11:24:32" itemprop="dateModified" datetime="2021-02-19T11:24:32+08:00">2021-02-19</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a>
+        </span>
+    </span>
 
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              
-                
-              
-
-              <time title="创建时间：2021-01-19 11:01:20" itemprop="dateCreated datePublished" datetime="2021-01-19T11:01:20+08:00">2021-01-19</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-19 11:24:32" itemprop="dateModified" datetime="2021-02-19T11:24:32+08:00">2021-02-19</time>
-              </span>
-            
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            <span class="post-meta-item" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
-            </span>
-          
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
 
         </div>
       </header>
@@ -335,9 +280,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-
-      
-        <h1 id="Charles安装与配置"><a href="#Charles安装与配置" class="headerlink" title="Charles安装与配置"></a>Charles安装与配置</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>最新的Charles工具，下载地址：<a href="https://www.charlesproxy.com/download/" target="_blank" rel="noopener">https://www.charlesproxy.com/download/</a></p>
+        <h1 id="Charles安装与配置"><a href="#Charles安装与配置" class="headerlink" title="Charles安装与配置"></a>Charles安装与配置</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>最新的Charles工具，下载地址：<a target="_blank" rel="noopener" href="https://www.charlesproxy.com/download/">https://www.charlesproxy.com/download/</a></p>
 <h2 id="配置代理端口号"><a href="#配置代理端口号" class="headerlink" title="配置代理端口号"></a>配置代理端口号</h2><p>Proxy -&gt; Proxy Settings -&gt; Port，port可以随便指定，这里取8888</p>
 <h2 id="配置HTTPS证书"><a href="#配置HTTPS证书" class="headerlink" title="配置HTTPS证书"></a>配置HTTPS证书</h2><h3 id="添加SSL-Proxying"><a href="#添加SSL-Proxying" class="headerlink" title="添加SSL Proxying"></a>添加SSL Proxying</h3><p>Proxy -&gt; SSL Proxying Settings -&gt;勾选“Enable SSL Proxying”，并点击下方的Add，可以这样配置：</p>
 <h3 id="安装Charles证书到Mac"><a href="#安装Charles证书到Mac" class="headerlink" title="安装Charles证书到Mac"></a>安装Charles证书到Mac</h3><p>Help–&gt;SSL Proxying→Install Charles Root Certificate </p>
@@ -356,7 +299,7 @@
 <p>其实Charles上显示确实抓到了包，但是当我们看抓包的详细数据时会发现报错:<br> “You may need to configure your browser or application to trust the Charles Root Certificate. See SSL Proxying in the Help menu”。</p>
 <p>Charles说手机端没有信任Charles的根证书，但是我们手机上已经安装了Charles根证书了，为什么会这样？</p>
 <p>原来在Android 7.0(API 24 ) ，有一个名为“Network Security Configuration”的新安全功能。这个新功能的目标是允许开发人员在不修改应用程序代码的情况下自定义他们的网络安全设置。如果应用程序运行的系统版本高于或等于24，并且targetSdkVersion&gt;=24，则只有系统(system)证书才会被信任。所以用户(user)导入的Charles根证书是不被信任的。</p>
-<h3 id="方法一：将证书提升为系统证书"><a href="#方法一：将证书提升为系统证书" class="headerlink" title="方法一：将证书提升为系统证书"></a>方法一：将证书提升为系统证书</h3><p>参考：<a href="https://blog.csdn.net/doctor_who2004/article/details/105718889" target="_blank" rel="noopener">android 7.0以上charles https抓包</a></p>
+<h3 id="方法一：将证书提升为系统证书"><a href="#方法一：将证书提升为系统证书" class="headerlink" title="方法一：将证书提升为系统证书"></a>方法一：将证书提升为系统证书</h3><p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/doctor_who2004/article/details/105718889">android 7.0以上charles https抓包</a></p>
 <p>将手机进行Root</p>
 <p>将下载的pem证书文件传到到电脑上，并执行以下命令得到证书的md5值</p>
 <p><code>openssl x509 -subject_hash_old -in &lt;file_name&gt;</code></p>
@@ -366,12 +309,12 @@
 <p>将上面步骤产生证书push到手机目录：<code>/system/etc/security/cacerts</code></p>
 <p>push中如果遇到错误 例如remount of the / superblock failed: Permission denied或者file only read等。</p>
 <p>解决办法:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ adb root</span><br><span class="line">$ adb disable-verity</span><br><span class="line">$ adb reboot</span><br><span class="line">$ adb root</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ adb root</span><br><span class="line">$ adb disable-verity</span><br><span class="line">$ adb reboot</span><br><span class="line">$ adb root</span><br></pre></td></tr></table></figure>
 
 <p>在 设置-&gt;安全-&gt;加密与凭据-&gt;信任的凭据 的系统标签页看到你新加入的证书，将其启用即可顺利抓包</p>
 <p>按照系统证书的方法，遇到问题：read-only file system android</p>
 <p>尝试adb root ，报错 adbd cannot run as root in production builds 安装adbd Insecure 依然不行</p>
-<h3 id="方法二：利用VirtualXposed"><a href="#方法二：利用VirtualXposed" class="headerlink" title="方法二：利用VirtualXposed"></a>方法二：利用VirtualXposed</h3><p>参考：<a href="https://zhuanlan.zhihu.com/p/162823763" target="_blank" rel="noopener">Android 7.0+使用VirtualXposed+Charles进行抓包</a></p>
+<h3 id="方法二：利用VirtualXposed"><a href="#方法二：利用VirtualXposed" class="headerlink" title="方法二：利用VirtualXposed"></a>方法二：利用VirtualXposed</h3><p>参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/162823763">Android 7.0+使用VirtualXposed+Charles进行抓包</a></p>
 <p>注意，0.18.2以后的VirtualXposed 不支持32位app</p>
 <h1 id="iOS-设置"><a href="#iOS-设置" class="headerlink" title="iOS 设置"></a>iOS 设置</h1><h2 id="iPhone代理设置"><a href="#iPhone代理设置" class="headerlink" title="iPhone代理设置"></a>iPhone代理设置</h2><p>设置→WIFI –&gt;点击Wi-Fi旁边的ⓘ</p>
 <p>滑到底部，点击配置代理</p>
@@ -386,437 +329,114 @@
     
     
     
-        
-      
-        <div id="reward-container">
-  <div>哥哥姐姐打发点咯~</div>
-  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    打赏
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>赞助博主的人类改造计划</div>
+  <button>
+    赞赏
   </button>
-  <div id="qr" style="display: none;">
-        
-      
-      <div style="display: inline-block">
-        <img src="/images/wechatpay.jpg" alt="8Biiit 微信支付">
-        <p>微信支付</p>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="8Biiit 微信">
+        <span>微信</span>
       </div>
-        
-      
-      <div style="display: inline-block">
-        <img src="/images/alipay.jpg" alt="8Biiit 支付宝">
-        <p>支付宝</p>
+      <div>
+        <img src="/images/alipay.png" alt="8Biiit 支付宝">
+        <span>支付宝</span>
       </div>
 
   </div>
 </div>
 
-      
-        
-
-<div>
-<ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者： </strong>8Biiit</li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="http://8Biiit.github.io/2021/01/19/Mac下使用Charles进行HTTP-HTTPS抓包/" title="Mac下使用Charles进行HTTP/HTTPS抓包">http://8Biiit.github.io/2021/01/19/Mac下使用Charles进行HTTP-HTTPS抓包/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
-</ul>
-</div>
-
-      
-
-      <footer class="post-footer">
-          
-            
-          
           <div class="post-tags">
-            
               <a href="/tags/Web/" rel="tag"># Web</a>
-            
               <a href="/tags/Mac/" rel="tag"># Mac</a>
-            
           </div>
-        
 
         
 
           <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-              
-                <a href="/2020/12/07/iOS虚拟定位/" rel="next" title="iOS虚拟定位">
+            <div class="post-nav-item">
+                <a href="/2020/12/07/iOS%E8%99%9A%E6%8B%9F%E5%AE%9A%E4%BD%8D/" rel="prev" title="iOS虚拟定位">
                   <i class="fa fa-chevron-left"></i> iOS虚拟定位
                 </a>
-              
             </div>
-
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2021/01/29/图片处理/" rel="prev" title="图片处理">
+            <div class="post-nav-item">
+                <a href="/2021/01/29/%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/" rel="next" title="图片处理">
                   图片处理 <i class="fa fa-chevron-right"></i>
                 </a>
-              
             </div>
           </div>
-        
-      </footer>
-    
-  </div>
-  
-  
-  
+    </footer>
   </article>
-
-  </div>
-
-
-          </div>
-          
-    
-    <div class="comments" id="gitalk-container"></div>
-  
-
-        </div>
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image"
-      src="/images/header.jpg"
-      alt="8Biiit">
-  <p class="site-author-name" itemprop="name">8Biiit</p>
-  <div class="site-description motion-element" itemprop="description">Everything from life</div>
 </div>
-  <nav class="site-state motion-element">
-      <div class="site-state-item site-state-posts">
-        
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">23</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-    
-      
-      
-      <div class="site-state-item site-state-categories">
-        
-          
-            <a href="/categories/">
-          
-        
-        
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-        <span class="site-state-item-count">8</span>
-        <span class="site-state-item-name">分类</span>
-        </a>
-      </div>
-    
-      
-      
-      <div class="site-state-item site-state-tags">
-        
-          
-            <a href="/tags/">
-          
-        
-        
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-        <span class="site-state-item-count">33</span>
-        <span class="site-state-item-name">标签</span>
-        </a>
-      </div>
-    
-  </nav>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-      
-      
-        
-      
-      
-        
-      
-        <a href="https://github.com/8biiit" title="GitHub &rarr; https://github.com/8biiit" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-    
-  </div>
-  <div class="cc-license motion-element" itemprop="license">
-    
-  
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
-  </div>
 
 
 
-        </div>
-      </div>
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Charles安装与配置"><span class="nav-number">1.</span> <span class="nav-text">Charles安装与配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置代理端口号"><span class="nav-number">1.2.</span> <span class="nav-text">配置代理端口号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置HTTPS证书"><span class="nav-number">1.3.</span> <span class="nav-text">配置HTTPS证书</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加SSL-Proxying"><span class="nav-number">1.3.1.</span> <span class="nav-text">添加SSL Proxying</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Charles证书到Mac"><span class="nav-number">1.3.2.</span> <span class="nav-text">安装Charles证书到Mac</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-设置"><span class="nav-number">2.</span> <span class="nav-text">Android 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android代理设置"><span class="nav-number">2.1.</span> <span class="nav-text">Android代理设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-7-0-以下设置"><span class="nav-number">2.2.</span> <span class="nav-text">Android 7.0 以下设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-7-0-以上设置"><span class="nav-number">2.3.</span> <span class="nav-text">Android 7.0 以上设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法一：将证书提升为系统证书"><span class="nav-number">2.3.1.</span> <span class="nav-text">方法一：将证书提升为系统证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法二：利用VirtualXposed"><span class="nav-number">2.3.2.</span> <span class="nav-text">方法二：利用VirtualXposed</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS-设置"><span class="nav-number">3.</span> <span class="nav-text">iOS 设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#iPhone代理设置"><span class="nav-number">3.1.</span> <span class="nav-text">iPhone代理设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iPhone证书安装"><span class="nav-number">3.2.</span> <span class="nav-text">iPhone证书安装</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
 
 
-      </div>
-    </main>
 
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; 2019 – <span itemprop="copyrightYear">2021</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-user"></i>
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">8Biiit</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
-
-        
 <div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-user"></i>
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
     </span>
-    <span class="site-uv" title="总访客量">
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
     </span>
-  
-    <span class="post-meta-divider">|</span>
-  
-    <span class="post-meta-item-icon">
-      <i class="fa fa-eye"></i>
-    </span>
-    <span class="site-pv" title="总访问量">
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-    </span>
-  
 </div>
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-      </div>
-
-    
-
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
+    </div>
+  </footer>
+
   
-  <script src="/lib/jquery/index.js?v=3.4.1"></script>
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
 
-<script src="/js/utils.js?v=7.3.0"></script>
-  <script src="/js/motion.js?v=7.3.0"></script>
-
-
-  <script src="/js/affix.js?v=7.3.0"></script>
-  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
-
-
-
-<script src="/js/next-boot.js?v=7.3.0"></script>
+  
+<script src="/js/third-party/search/local-search.js"></script>
 
 
 
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
 
-
-
-
-
-
-
-
-
-
-
-  <script src="/js/local-search.js?v=7.3.0"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-  
-
-
-  
-  <script src="/js/scrollspy.js?v=7.3.0"></script>
-<script src="/js/post-details.js?v=7.3.0"></script>
-
-
-    
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
-
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
-    var gitalk = new Gitalk({
-      clientID: '8c5e1f409f422d4e10f6',
-      clientSecret: 'dd74067b3e311d6338eb117e3711361d6769df41',
-      repo: '8biiit.github.io',
-      owner: '8biiit',
-      admin: ['8biiit'],
-      id: '60479e51e706e820f9fe8b4863fdae2f',
-        language: 'zh-CN',
-      
-      distractionFreeMode: 'true'
-    });
-    gitalk.render('gitalk-container');
-  }, window.Gitalk);
-</script>
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"8biiit","repo":"8biiit.github.io","client_id":"8c5e1f409f422d4e10f6","client_secret":"dd74067b3e311d6338eb117e3711361d6769df41","admin_user":"8biiit","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"60479e51e706e820f9fe8b4863fdae2f"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
 
 </body>
 </html>
