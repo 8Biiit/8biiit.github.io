@@ -591,33 +591,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Mac更新bash至4.0以上</title>
-    <url>/2019/09/20/Mac%E6%9B%B4%E6%96%B0bash%E8%87%B34-0%E4%BB%A5%E4%B8%8A/</url>
-    <content><![CDATA[<p>Mac自带的bash为3.2版本，而最新的bash是5.0一上了。这导致bash无法支持新特性，而且执行脚本时也会提示bash要升级。</p>
-<span id="more"></span>
-
-<h3 id="升级方法"><a href="#升级方法" class="headerlink" title="升级方法"></a>升级方法</h3><p>查看bash版本<code> bash --version</code><br>执行<code>brew install bash</code></p>
-<p>此时，bash虽然安装了，但是/bin/bash的版本依然没有改变。<br>这是因为mac系统禁止更改系统目录的权限，引入sip机制，需要先关闭，修改，再打开这一系列操作</p>
-<h3 id="打开和关闭sip"><a href="#打开和关闭sip" class="headerlink" title="打开和关闭sip"></a>打开和关闭sip</h3><p>关闭sip</p>
-<ol>
-<li>重启系统，然后按住Command+R</li>
-<li>出现界面之后，在最上方菜单栏选择Utilities menu中Terminal</li>
-<li>在Terminal中输入csrutil disable关闭SIP</li>
-<li>重启reboot </li>
-</ol>
-<h3 id="加入软链接"><a href="#加入软链接" class="headerlink" title="加入软链接"></a>加入软链接</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo mv /bin/bash  /bin/bash.origin</span><br><span class="line">sudo ln -s /usr/local/bin/bash /bin/bash</span><br></pre></td></tr></table></figure>
-
-<p>修改完成之后，查看版本是否更改。<br>更改后重新打开sip，打开时执行<code>csrutil enable </code></p>
-]]></content>
-      <categories>
-        <category>MacOS</category>
-      </categories>
-      <tags>
-        <tag>MacOS</tag>
-        <tag>bash</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Mac下编译V8</title>
     <url>/2020/07/15/Mac%E4%B8%8B%E7%BC%96%E8%AF%91V8/</url>
     <content><![CDATA[<p>V8是一个由Google开发的开源JavaScript引擎，用于Google Chrome及Chromium中。由于需要使用到V8，来在自己的C++项目中执行js，因此想要学习了解下V8的实现原理。打算先在Mac本地上编译运行起来，之后再尝试交叉编译。</p>
@@ -691,6 +664,33 @@
       <tags>
         <tag>MacOS</tag>
         <tag>V8</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mac更新bash至4.0以上</title>
+    <url>/2019/09/20/Mac%E6%9B%B4%E6%96%B0bash%E8%87%B34-0%E4%BB%A5%E4%B8%8A/</url>
+    <content><![CDATA[<p>Mac自带的bash为3.2版本，而最新的bash是5.0一上了。这导致bash无法支持新特性，而且执行脚本时也会提示bash要升级。</p>
+<span id="more"></span>
+
+<h3 id="升级方法"><a href="#升级方法" class="headerlink" title="升级方法"></a>升级方法</h3><p>查看bash版本<code> bash --version</code><br>执行<code>brew install bash</code></p>
+<p>此时，bash虽然安装了，但是/bin/bash的版本依然没有改变。<br>这是因为mac系统禁止更改系统目录的权限，引入sip机制，需要先关闭，修改，再打开这一系列操作</p>
+<h3 id="打开和关闭sip"><a href="#打开和关闭sip" class="headerlink" title="打开和关闭sip"></a>打开和关闭sip</h3><p>关闭sip</p>
+<ol>
+<li>重启系统，然后按住Command+R</li>
+<li>出现界面之后，在最上方菜单栏选择Utilities menu中Terminal</li>
+<li>在Terminal中输入csrutil disable关闭SIP</li>
+<li>重启reboot </li>
+</ol>
+<h3 id="加入软链接"><a href="#加入软链接" class="headerlink" title="加入软链接"></a>加入软链接</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo mv /bin/bash  /bin/bash.origin</span><br><span class="line">sudo ln -s /usr/local/bin/bash /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>修改完成之后，查看版本是否更改。<br>更改后重新打开sip，打开时执行<code>csrutil enable </code></p>
+]]></content>
+      <categories>
+        <category>MacOS</category>
+      </categories>
+      <tags>
+        <tag>MacOS</tag>
+        <tag>bash</tag>
       </tags>
   </entry>
   <entry>
@@ -768,42 +768,6 @@
       </tags>
   </entry>
   <entry>
-    <title>iOS应用ipa重签名</title>
-    <url>/2019/08/21/iOS%E5%BA%94%E7%94%A8ipa%E9%87%8D%E7%AD%BE%E5%90%8D/</url>
-    <content><![CDATA[<p>作为一项安全措施，Apple要求其信任的开发人员对在其设备上运行的所有代码进行数字签名。有时我们需要对第三方包进行修改后重新安装，因此需要进行重签名通过验证。</p>
-<span id="more"></span>
-
-<h3 id="使用Xcode重签名"><a href="#使用Xcode重签名" class="headerlink" title="使用Xcode重签名"></a>使用Xcode重签名</h3><ol>
-<li><p>新建一个工程编译</p>
-</li>
-<li><p>获得这个新工程的签名<br> 查看位置：product-&gt;app-&gt;在path中打开</p>
-</li>
-<li><p>   用要签名的app替换掉工程app，把要签名的app的名字改为工程名字</p>
-</li>
-<li><p>   把要签名app的info.plist里的buddleid 改为工程的bundleid</p>
-</li>
-<li><p>使用要签名的证书对app进行签名 </p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">codesign -fs &quot;iPhone Developer: amor.diavolo@icloud.com (K239F7Y6DD)&quot; MTPotal.app</span><br></pre></td></tr></table></figure>
-<p> 查看本机证书： <code>security find-identity -v -p codesigning</code></p>
-</li>
-<li><p>在xcode中run，将会把签名后的app安装在真机上，此时可看到ui界面，也可lldb进行调试。</p>
-</li>
-</ol>
-<h3 id="使用Monkeydev自动签名"><a href="#使用Monkeydev自动签名" class="headerlink" title="使用Monkeydev自动签名"></a>使用Monkeydev自动签名</h3><ol>
-<li>创建一个<a href="https://github.com/AloneMonkey/MonkeyDev">MonkeyDev</a>项目</li>
-<li>把砸了壳的IPA包放到Target目录下</li>
-<li>直接运行就可以跑到手机上了</li>
-</ol>
-]]></content>
-      <categories>
-        <category>iOS</category>
-      </categories>
-      <tags>
-        <tag>iOS</tag>
-        <tag>逆向</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>iOS with Extension砸壳全过程</title>
     <url>/2019/10/10/iOS-with-Extension%E7%A0%B8%E5%A3%B3%E5%85%A8%E8%BF%87%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
@@ -848,6 +812,42 @@
       </tags>
   </entry>
   <entry>
+    <title>iOS应用ipa重签名</title>
+    <url>/2019/08/21/iOS%E5%BA%94%E7%94%A8ipa%E9%87%8D%E7%AD%BE%E5%90%8D/</url>
+    <content><![CDATA[<p>作为一项安全措施，Apple要求其信任的开发人员对在其设备上运行的所有代码进行数字签名。有时我们需要对第三方包进行修改后重新安装，因此需要进行重签名通过验证。</p>
+<span id="more"></span>
+
+<h3 id="使用Xcode重签名"><a href="#使用Xcode重签名" class="headerlink" title="使用Xcode重签名"></a>使用Xcode重签名</h3><ol>
+<li><p>新建一个工程编译</p>
+</li>
+<li><p>获得这个新工程的签名<br> 查看位置：product-&gt;app-&gt;在path中打开</p>
+</li>
+<li><p>   用要签名的app替换掉工程app，把要签名的app的名字改为工程名字</p>
+</li>
+<li><p>   把要签名app的info.plist里的buddleid 改为工程的bundleid</p>
+</li>
+<li><p>使用要签名的证书对app进行签名 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">codesign -fs &quot;iPhone Developer: amor.diavolo@icloud.com (K239F7Y6DD)&quot; MTPotal.app</span><br></pre></td></tr></table></figure>
+<p> 查看本机证书： <code>security find-identity -v -p codesigning</code></p>
+</li>
+<li><p>在xcode中run，将会把签名后的app安装在真机上，此时可看到ui界面，也可lldb进行调试。</p>
+</li>
+</ol>
+<h3 id="使用Monkeydev自动签名"><a href="#使用Monkeydev自动签名" class="headerlink" title="使用Monkeydev自动签名"></a>使用Monkeydev自动签名</h3><ol>
+<li>创建一个<a href="https://github.com/AloneMonkey/MonkeyDev">MonkeyDev</a>项目</li>
+<li>把砸了壳的IPA包放到Target目录下</li>
+<li>直接运行就可以跑到手机上了</li>
+</ol>
+]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>iOS</tag>
+        <tag>逆向</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>iOS虚拟定位</title>
     <url>/2020/12/07/iOS%E8%99%9A%E6%8B%9F%E5%AE%9A%E4%BD%8D/</url>
     <content><![CDATA[<p>虚拟定位指利用软硬件更改手机系统的定位数据，从而使目标app获取错误的定位信息。一般用于黑产、游戏外挂、社交软件打卡等。<br>这里提供一种简单的修改iOS设备定位的方法。</p>
@@ -875,39 +875,6 @@
       <tags>
         <tag>iOS</tag>
         <tag>Virtual Location</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>theos安装、环境配置</title>
-    <url>/2019/08/16/theos%E5%AE%89%E8%A3%85%E3%80%81%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[<p><a href="https://github.com/theos/theos">Theos</a> 是一个越狱开发工具包，安装方法可以参考 <a href="https://github.com/theos/theos/wiki">Wiki</a>。</p>
-<span id="more"></span>
-
-<h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><h3 id="安装-dpkg"><a href="#安装-dpkg" class="headerlink" title="安装 dpkg"></a>安装 dpkg</h3><p>dpkg(Debian Packager) 是 Theos 依赖工具之一，可以使用 dpkg 制作 deb，Theos 开发的插件都会以 deb 的格式进行发布，在安装 Theos 之前需要安装 dpkg.</p>
-<p>安装借助于<a href="https://brew.sh/">Homebrew</a>安装，确保先安装 Homebrew。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">brew install dpkg</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装-ldid"><a href="#安装-ldid" class="headerlink" title="安装 ldid"></a>安装 ldid</h3><p><a href="http://iphonedevwiki.net/index.php/Ldid">ldid</a>是越狱祖师爷Saurik开发的一款二进制授权管理软件，可以对越狱应用进行SHA1运算生成授权，让软件包可以在iPhone上执行。Theos 开发中，iOS 文件的签名使用 ldid 工具完成，代替了 XCode 中的 Codesign。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">brew install ldid</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装Thoes"><a href="#安装Thoes" class="headerlink" title="安装Thoes"></a>安装Thoes</h2><p>将 Theos 安装在 /opt/theos 目录下</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo Git clone --recursive https://github.com/theos/theos.git /opt/theos</span><br><span class="line">//recursive表示递归</span><br></pre></td></tr></table></figure>
-<h2 id="将-opt-theos-权限改为自己"><a href="#将-opt-theos-权限改为自己" class="headerlink" title="将 /opt/theos 权限改为自己"></a>将 /opt/theos 权限改为自己</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo chown $(id -u):$(id -g) /opt/theos</span><br></pre></td></tr></table></figure>
-<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p> 在~./bash_profile中加上:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export THEOS=/opt/theos</span><br><span class="line">export PATH=/opt/theos/bin/:$PATH</span><br></pre></td></tr></table></figure>
-<p>执行一遍source命令使得环境变量生效</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">source ~/.bash_profile</span><br></pre></td></tr></table></figure>
-<h2 id="测试是否安装成功"><a href="#测试是否安装成功" class="headerlink" title="测试是否安装成功"></a>测试是否安装成功</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nic.pl</span><br></pre></td></tr></table></figure>
-<p>New Instance Creator开始执行则已经安装成功</p>
-<h2 id="Theos升级到最新版"><a href="#Theos升级到最新版" class="headerlink" title="Theos升级到最新版"></a>Theos升级到最新版</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git submodule update –recursive</span><br></pre></td></tr></table></figure>
-<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="http://iosre.com/t/theos/4928">http://iosre.com/t/theos/4928</a></p>
-]]></content>
-      <categories>
-        <category>iOS</category>
-      </categories>
-      <tags>
-        <tag>逆向</tag>
-        <tag>theos</tag>
       </tags>
   </entry>
   <entry>
@@ -964,6 +931,39 @@
         <tag>CV</tag>
         <tag>yolo3</tag>
         <tag>tensorflow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>theos安装、环境配置</title>
+    <url>/2019/08/16/theos%E5%AE%89%E8%A3%85%E3%80%81%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<p><a href="https://github.com/theos/theos">Theos</a> 是一个越狱开发工具包，安装方法可以参考 <a href="https://github.com/theos/theos/wiki">Wiki</a>。</p>
+<span id="more"></span>
+
+<h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><h3 id="安装-dpkg"><a href="#安装-dpkg" class="headerlink" title="安装 dpkg"></a>安装 dpkg</h3><p>dpkg(Debian Packager) 是 Theos 依赖工具之一，可以使用 dpkg 制作 deb，Theos 开发的插件都会以 deb 的格式进行发布，在安装 Theos 之前需要安装 dpkg.</p>
+<p>安装借助于<a href="https://brew.sh/">Homebrew</a>安装，确保先安装 Homebrew。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">brew install dpkg</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-ldid"><a href="#安装-ldid" class="headerlink" title="安装 ldid"></a>安装 ldid</h3><p><a href="http://iphonedevwiki.net/index.php/Ldid">ldid</a>是越狱祖师爷Saurik开发的一款二进制授权管理软件，可以对越狱应用进行SHA1运算生成授权，让软件包可以在iPhone上执行。Theos 开发中，iOS 文件的签名使用 ldid 工具完成，代替了 XCode 中的 Codesign。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">brew install ldid</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装Thoes"><a href="#安装Thoes" class="headerlink" title="安装Thoes"></a>安装Thoes</h2><p>将 Theos 安装在 /opt/theos 目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo Git clone --recursive https://github.com/theos/theos.git /opt/theos</span><br><span class="line">//recursive表示递归</span><br></pre></td></tr></table></figure>
+<h2 id="将-opt-theos-权限改为自己"><a href="#将-opt-theos-权限改为自己" class="headerlink" title="将 /opt/theos 权限改为自己"></a>将 /opt/theos 权限改为自己</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo chown $(id -u):$(id -g) /opt/theos</span><br></pre></td></tr></table></figure>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p> 在~./bash_profile中加上:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export THEOS=/opt/theos</span><br><span class="line">export PATH=/opt/theos/bin/:$PATH</span><br></pre></td></tr></table></figure>
+<p>执行一遍source命令使得环境变量生效</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">source ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<h2 id="测试是否安装成功"><a href="#测试是否安装成功" class="headerlink" title="测试是否安装成功"></a>测试是否安装成功</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nic.pl</span><br></pre></td></tr></table></figure>
+<p>New Instance Creator开始执行则已经安装成功</p>
+<h2 id="Theos升级到最新版"><a href="#Theos升级到最新版" class="headerlink" title="Theos升级到最新版"></a>Theos升级到最新版</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git submodule update –recursive</span><br></pre></td></tr></table></figure>
+<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p><a href="http://iosre.com/t/theos/4928">http://iosre.com/t/theos/4928</a></p>
+]]></content>
+      <categories>
+        <category>iOS</category>
+      </categories>
+      <tags>
+        <tag>逆向</tag>
+        <tag>theos</tag>
       </tags>
   </entry>
   <entry>
