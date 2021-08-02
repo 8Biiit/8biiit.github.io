@@ -1350,9 +1350,18 @@
 <h1 id="文章设置"><a href="#文章设置" class="headerlink" title="文章设置"></a>文章设置</h1><h2 id="tag分类"><a href="#tag分类" class="headerlink" title="tag分类"></a>tag分类</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: </span><br><span class="line">date: 2021-01-01 00:00:00</span><br><span class="line">tags:</span><br><span class="line">- Hexo</span><br><span class="line">categories: Hexo	</span><br><span class="line">---</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">_posts/post_name/image.jpg</span><br><span class="line">&#123;% asset_img image.jpg This is an image %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<img src="/.io//08/01/Hexo-Next%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7/img.jpg" class title="This is an image">
+<img src="/2021/08/01/Hexo-Next%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7/img.jpg" class title="This is an image">
 
-<p><img src="/.io//img.jpg" alt="This is an image"></p>
+
+
+<p><img src="/2021/08/01/Hexo-Next%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7/img.jpg" alt="This is an image"></p>
+<p><img src="/2021/08/01/Hexo-Next%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7/img.JPG" alt="This is an image"></p>
+<img src="/2021/08/01/Hexo-Next%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7/img.jpg" class title="label">
+
+
+
+
+
 ]]></content>
       <categories>
         <category>杂项</category>
