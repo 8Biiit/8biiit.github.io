@@ -1442,9 +1442,13 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ ffmpeg &#123;1&#125; &#123;2&#125; -i &#123;3&#125; &#123;4&#125; &#123;5&#125;</span><br></pre></td></tr></table></figure>
 
 <p>分别是：全局参数、输入文件参数、输入文件、输出文件参数、输出文件</p>
-<h2 id="去除b帧"><a href="#去除b帧" class="headerlink" title="去除b帧"></a>去除b帧</h2><p>（仅针对x264解码器）</p>
+<h2 id="控制b帧"><a href="#控制b帧" class="headerlink" title="控制b帧"></a>控制b帧</h2><p>（仅针对x264解码器）</p>
+<p>去除b帧</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ffmpeg -i test.mp4 -vcodec libx264 -bf 0 out.mp4</span><br><span class="line">ffmpeg -i test.mp4 -vcodec libx264 -x264opts &quot;bframes=0&quot; out.mp4</span><br></pre></td></tr></table></figure>
 <p>参考：<a href="https://sites.google.com/site/linuxencoding/x264-ffmpeg-mapping">ffmpeg x264 选项指南</a></p>
+<p>如果希望控制I帧P帧B帧的频率和规律，可以通过控制GOP中B帧的帧数来实现，P帧的频率可以通过x264的参数b-adapt进行设置。<br>例如设置GOP中，每2个P帧之间存放3个B帧：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ffmpeg -i input.mp4 -c:v libx264 -x264opts &quot;bframes=3:b-adapt=0&quot; -g 50 -sc_threshold 0 -t 60 output.mp4</span><br></pre></td></tr></table></figure>
+
 <h2 id="缩放视频"><a href="#缩放视频" class="headerlink" title="缩放视频"></a>缩放视频</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">普通缩放</span></span><br><span class="line">ffmpeg -s 720x1280 -pix_fmt yuv420p -i out.yuv -vcodec libx264 output.mp4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">设置纵横比</span></span><br><span class="line">ffmpeg -i input.mov -vf scale=720x406,setdar=16:9 output.mp4</span><br></pre></td></tr></table></figure>
 
 <h2 id="显示媒体流信息"><a href="#显示媒体流信息" class="headerlink" title="显示媒体流信息"></a>显示媒体流信息</h2><p>ffprobe 是ffmpeg的一个工具包，主要用于探测音视频文件的各种信息</p>
