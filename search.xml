@@ -1369,7 +1369,7 @@
   </entry>
   <entry>
     <title>FFmpeg知识库</title>
-    <url>/2021/08/03/FFmpeg/</url>
+    <url>/2021/07/01/FFmpeg/</url>
     <content><![CDATA[<p><a href="https://www.ffmpeg.org/">FFmpeg</a>是一个开源免费跨平台的视频和音频流方案，采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。<br>最近做解码相关，需要用到FFmpeg的api。有幸拜读<a href="https://blog.csdn.net/leixiaohua1020/category_9262578.html?spm=1001.2014.3001.5482">雷霄骅(leixiaohua1020)</a>的专栏，以下大部分内容是阅读专栏摘录内容加上自己的整理和总结。缅怀雷神</p>
 <span id="more"></span>
 <h1 id="常用API"><a href="#常用API" class="headerlink" title="常用API"></a>常用API</h1><h2 id="获取库版本"><a href="#获取库版本" class="headerlink" title="获取库版本"></a>获取库版本</h2><p>方法：<code>avcodec_version()</code>   <code>swscale_version()</code>   <code>avutil_version()</code>  <code>avformat_version()</code>  <code>swresample_version()</code></p>
