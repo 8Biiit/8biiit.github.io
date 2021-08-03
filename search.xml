@@ -1446,8 +1446,8 @@
 <p>去除b帧</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ffmpeg -i test.mp4 -vcodec libx264 -bf 0 out.mp4</span><br><span class="line">ffmpeg -i test.mp4 -vcodec libx264 -x264opts &quot;bframes=0&quot; out.mp4</span><br></pre></td></tr></table></figure>
 <p>参考：<a href="https://sites.google.com/site/linuxencoding/x264-ffmpeg-mapping">ffmpeg x264 选项指南</a></p>
-<p>如果希望控制I帧P帧B帧的频率和规律，可以通过控制GOP中B帧的帧数来实现，P帧的频率可以通过x264的参数b-adapt进行设置。<br>例如设置GOP中，每2个P帧之间存放3个B帧：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ffmpeg -i input.mp4 -c:v libx264 -x264opts &quot;bframes=3:b-adapt=0&quot; -g 50 -sc_threshold 0 -t 60 output.mp4</span><br></pre></td></tr></table></figure>
+<p>如果希望控制I帧P帧B帧的频率和规律，可以通过控制GOP中B帧的帧数来实现，P帧的频率可以通过x264的参数b-adapt进行设置。<br>利用sc_threshold解决场景切换会强制插入GOP问题。<br>例如设置GOP中，每2个P帧之间存放3个B帧：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ffmpeg -i input.mp4 -c:v libx264 -x264opts &quot;bframes=3:b-adapt=0&quot; -g 50 -sc_threshold 0  output.mp4</span><br></pre></td></tr></table></figure>
 
 <h2 id="缩放视频"><a href="#缩放视频" class="headerlink" title="缩放视频"></a>缩放视频</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">普通缩放</span></span><br><span class="line">ffmpeg -s 720x1280 -pix_fmt yuv420p -i out.yuv -vcodec libx264 output.mp4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">设置纵横比</span></span><br><span class="line">ffmpeg -i input.mov -vf scale=720x406,setdar=16:9 output.mp4</span><br></pre></td></tr></table></figure>
 
