@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/header.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/header.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/header.jpg">
+  <link rel="mask-icon" href="/images/header.jpg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"8biiit.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2}},"activeClass":"gitalk"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="FFmpeg是一个开源免费跨平台的视频和音频流方案，采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。最近做解码相关，需要用到FFmpeg的api。有幸拜读雷霄骅(leixiaohua1020)的专栏，以下大部分内容是阅读专栏摘录内容加上自己的整理和总结。缅怀雷神 常用API获取库版本方法：avcodec_version()   swscale_version()   a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFmpeg">
+<meta property="og:url" content="http://8biiit.github.io/2021/08/03/FFmpeg/index.html">
+<meta property="og:site_name" content="8Biiit&#39;s Blog">
+<meta property="og:description" content="FFmpeg是一个开源免费跨平台的视频和音频流方案，采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。最近做解码相关，需要用到FFmpeg的api。有幸拜读雷霄骅(leixiaohua1020)的专栏，以下大部分内容是阅读专栏摘录内容加上自己的整理和总结。缅怀雷神 常用API获取库版本方法：avcodec_version()   swscale_version()   a">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-03T06:43:13.000Z">
+<meta property="article:modified_time" content="2021-08-03T07:07:28.410Z">
+<meta property="article:author" content="8Biiit">
+<meta property="article:tag" content="FFmpeg">
+<meta property="article:tag" content="media">
+<meta property="article:tag" content="Codec">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://8biiit.github.io/2021/08/03/FFmpeg/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://8biiit.github.io/2021/08/03/FFmpeg/","path":"2021/08/03/FFmpeg/","title":"FFmpeg"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>FFmpeg | 8Biiit's Blog</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">8Biiit's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">写点有用的</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8API"><span class="nav-number">1.</span> <span class="nav-text">常用API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%BA%93%E7%89%88%E6%9C%AC"><span class="nav-number">1.1.</span> <span class="nav-text">获取库版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C%EF%BC%9Aav-register-all"><span class="nav-number">1.2.</span> <span class="nav-text">注册：av_register_all</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6%EF%BC%9Aavformat-open-input"><span class="nav-number">1.3.</span> <span class="nav-text">打开文件：avformat_open_input</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E7%A0%81%E6%B5%81%EF%BC%9Aavformat-find-stream-info"><span class="nav-number">1.4.</span> <span class="nav-text">查找码流：avformat_find_stream_info</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E8%A7%A3%E7%A0%81%E5%99%A8%EF%BC%9Aavcodec-find-decoder"><span class="nav-number">1.5.</span> <span class="nav-text">查找解码器：avcodec_find_decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E8%A7%A3%E7%A0%81%E5%99%A8%EF%BC%9Aavcodec-open2"><span class="nav-number">1.6.</span> <span class="nav-text">打开解码器：avcodec_open2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%EF%BC%9Aav-read-frame"><span class="nav-number">1.7.</span> <span class="nav-text">读取：av_read_frame</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E7%A0%81%EF%BC%9Aavcodec-decode-video2"><span class="nav-number">1.8.</span> <span class="nav-text">解码：avcodec_decode_video2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%A9%E6%94%BE%EF%BC%9Asws-scale"><span class="nav-number">1.9.</span> <span class="nav-text">缩放：sws_scale</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%B9%B6%E8%B7%B3%E8%BD%AC%EF%BC%9Aav-seek-frame"><span class="nav-number">1.10.</span> <span class="nav-text">查找并跳转：av_seek_frame</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">2.</span> <span class="nav-text">结构体</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AVFormatContext"><span class="nav-number">2.1.</span> <span class="nav-text">AVFormatContext</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AVFrame"><span class="nav-number">2.2.</span> <span class="nav-text">AVFrame</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AVCodecContext"><span class="nav-number">2.3.</span> <span class="nav-text">AVCodecContext</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AVCodec"><span class="nav-number">2.4.</span> <span class="nav-text">AVCodec</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AVStream"><span class="nav-number">2.5.</span> <span class="nav-text">AVStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AVPacket"><span class="nav-number">2.6.</span> <span class="nav-text">AVPacket</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">编解码器常用命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%BB%E9%99%A4b%E5%B8%A7"><span class="nav-number">3.1.</span> <span class="nav-text">去除b帧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%A9%E6%94%BE%E8%A7%86%E9%A2%91"><span class="nav-number">3.2.</span> <span class="nav-text">缩放视频</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E5%AA%92%E4%BD%93%E6%B5%81%E4%BF%A1%E6%81%AF"><span class="nav-number">3.3.</span> <span class="nav-text">显示媒体流信息</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="8Biiit"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">8Biiit</p>
+  <div class="site-description" itemprop="description">奇跡ってのは、タダじゃないんだ</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/8biiit" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;8biiit" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://8biiit.github.io/2021/08/03/FFmpeg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="8Biiit">
+      <meta itemprop="description" content="奇跡ってのは、タダじゃないんだ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="8Biiit's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          FFmpeg
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-08-03 14:43:13 / 修改时间：15:07:28" itemprop="dateCreated datePublished" datetime="2021-08-03T14:43:13+08:00">2021-08-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Codec/" itemprop="url" rel="index"><span itemprop="name">Codec</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><a target="_blank" rel="noopener" href="https://www.ffmpeg.org/">FFmpeg</a>是一个开源免费跨平台的视频和音频流方案，采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。<br>最近做解码相关，需要用到FFmpeg的api。有幸拜读<a target="_blank" rel="noopener" href="https://blog.csdn.net/leixiaohua1020/category_9262578.html?spm=1001.2014.3001.5482">雷霄骅(leixiaohua1020)</a>的专栏，以下大部分内容是阅读专栏摘录内容加上自己的整理和总结。缅怀雷神</p>
+<h1 id="常用API"><a href="#常用API" class="headerlink" title="常用API"></a>常用API</h1><h2 id="获取库版本"><a href="#获取库版本" class="headerlink" title="获取库版本"></a>获取库版本</h2><p>方法：<code>avcodec_version()</code>   <code>swscale_version()</code>   <code>avutil_version()</code>  <code>avformat_version()</code>  <code>swresample_version()</code></p>
+<p>返回：十进制数字，如3835492</p>
+<p>转换成版本号：3835492 -&gt;  0x3a8664  -&gt; 58  134  100 -&gt; 58.134.100</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://m.yisu.com/zixun/69213.html">版本转换方法</a>、<a target="_blank" rel="noopener" href="https://blog.csdn.net/seniorwizard/article/details/94725567">FFMPEG版本对应的库版本</a>、<a target="_blank" rel="noopener" href="http://ffmpeg.org/doxygen/trunk/group__version__utils.html#gaaab323b60e1a6e38ec939efe881474c7">Library Version Macros</a></p>
+<h2 id="注册：av-register-all"><a href="#注册：av-register-all" class="headerlink" title="注册：av_register_all"></a>注册：av_register_all</h2><p>注册所有的编解码器、复用/解复用组件等</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">av_register_all</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg和reval 均为void</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：FFmpeg4.0 以上的版本，这个函数已经被废弃。</p>
+</blockquote>
+<h2 id="打开文件：avformat-open-input"><a href="#打开文件：avformat-open-input" class="headerlink" title="打开文件：avformat_open_input"></a>打开文件：avformat_open_input</h2><p>打开多媒体数据并且根据header获得一些相关的信息</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="built_in">avformat_open_input</span>(&amp;pFormatCtx, filepath, fmt, options);</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg1: AVFormatContext结构体</span></span><br><span class="line"><span class="comment">//arg2: 打开的文件名或视音频流的URL</span></span><br><span class="line"><span class="comment">//arg3: 强制指定AVFormatContext中AVInputFormat。默认为NULL，自动检测AVInputFormat</span></span><br><span class="line"><span class="comment">//agr4: 附加选项，默认为NULL</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//reval: 成功返回0，错误返回负值AVERROR</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>需以 avformat_close_input() 方法结束</p>
+</blockquote>
+<h2 id="查找码流：avformat-find-stream-info"><a href="#查找码流：avformat-find-stream-info" class="headerlink" title="查找码流：avformat_find_stream_info"></a>查找码流：avformat_find_stream_info</h2><p>读取媒体文件的packets以获取stream信息</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="built_in">avformat_find_stream_info</span>(pFormatCtx, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg1: 输入的AVFormatContext</span></span><br><span class="line"><span class="comment">//arg2: 附加选项，默认为NULL</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//reval: 成功返回&gt;=0，错误返回负值AVERROR</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="查找解码器：avcodec-find-decoder"><a href="#查找解码器：avcodec-find-decoder" class="headerlink" title="查找解码器：avcodec_find_decoder"></a>查找解码器：avcodec_find_decoder</h2><p>查找编码器</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AVCodec *pCodec = <span class="built_in">avcodec_find_decoder</span>(codec_id);</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg1: 解码器的ID,可以通过pCodecCtx-&gt;codec_id 访问</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//reval: 查找到的解码器（没有找到就返回NULL）</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="打开解码器：avcodec-open2"><a href="#打开解码器：avcodec-open2" class="headerlink" title="打开解码器：avcodec_open2"></a>打开解码器：avcodec_open2</h2><p>使用给定的编解码器初始化一个视音频编解码器的AVCodecContext</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="built_in">avcodec_open2</span>(pCodecCtx, pCodec, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg1: 需要初始化的AVCodecContext</span></span><br><span class="line"><span class="comment">//arg2: 输入的AVCodec</span></span><br><span class="line"><span class="comment">//arg3: 附加选项，默认为NULL。例如使用libx264编码的时候，“preset”，“tune”等都可以通过该参数设置</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//reval: 成功返回0，错误返回负值ERROR</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="读取：av-read-frame"><a href="#读取：av-read-frame" class="headerlink" title="读取：av_read_frame"></a>读取：av_read_frame</h2><p>读取码流中的若干帧音频或者一帧视频</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="built_in">av_read_frame</span>(pFormatCtx, packet);</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg1: 输入的AVFormatContext</span></span><br><span class="line"><span class="comment">//arg2: 输出的AVPacket</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//reval: 成功返回0，负值代表ERROR或文件末尾</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="解码：avcodec-decode-video2"><a href="#解码：avcodec-decode-video2" class="headerlink" title="解码：avcodec_decode_video2"></a>解码：avcodec_decode_video2</h2><p>从AVPacket解码一帧视频数据到AVPFrame</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="built_in">avcodec_decode_video2</span>(pCodecCtx, pFrame, &amp;got_picture, packet);</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg1: 输入的AVFormatContext</span></span><br><span class="line"><span class="comment">//arg2: 输出的AVPFrame</span></span><br><span class="line"><span class="comment">//arg3: 不能解码返回0，否则非0</span></span><br><span class="line"><span class="comment">//arg4: 输入的AVPacket</span></span><br><span class="line">  </span><br><span class="line"><span class="comment">//reval: 成功返回0或使用的byte数，负值代表ERROR</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="缩放：sws-scale"><a href="#缩放：sws-scale" class="headerlink" title="缩放：sws_scale"></a>缩放：sws_scale</h2><p>将源图片进行缩放，存入目标图片</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="built_in">sws_scale</span>(img_convert_ctx, (<span class="keyword">const</span> <span class="keyword">uint8_t</span>* <span class="keyword">const</span>*)pFrame-&gt;data, pFrame-&gt;linesize, <span class="number">0</span>, pCodecCtx-&gt;height, </span><br><span class="line">                            pFrameYUV-&gt;data, pFrameYUV-&gt;linesize);</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg1: 通过sws_getContext()方法获得的context</span></span><br><span class="line"><span class="comment">//arg2: src的buffer</span></span><br><span class="line"><span class="comment">//arg3: src的stride</span></span><br><span class="line"><span class="comment">//arg4: 要处理的位置，默认为0，从头处理</span></span><br><span class="line"><span class="comment">//arg5: source slice 的高度</span></span><br><span class="line"><span class="comment">//arg6: dst的buffer</span></span><br><span class="line"><span class="comment">//arg7: dst的stride</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//reval: 成功返回0或使用的byte数，负值代表ERROR</span></span><br></pre></td></tr></table></figure>
+<p>使用时，调用sws_getContext() 开始，调用sws_freeContext() 結束。</p>
+<h2 id="查找并跳转：av-seek-frame"><a href="#查找并跳转：av-seek-frame" class="headerlink" title="查找并跳转：av_seek_frame"></a>查找并跳转：av_seek_frame</h2><p>视频跳转到指定时间戳</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> res = <span class="built_in">av_seek_frame</span>(pFormatCtx,videoindex,pos,AVSEEK_FLAG_ANY);</span><br><span class="line"></span><br><span class="line"><span class="comment">//arg1: 输入的AVFormatContext</span></span><br><span class="line"><span class="comment">//arg2: 流的index，若为-1，则使用默认流</span></span><br><span class="line"><span class="comment">//arg3: 时间戳</span></span><br><span class="line"><span class="comment">//arg4: 方向和seek模式的flag，可能同时包含以上的多个值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//flag值：</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AVSEEK_FLAG_BACKWARD 1 <span class="comment">///&lt; seek backward</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AVSEEK_FLAG_BYTE     2 <span class="comment">///&lt; seeking based on position in bytes</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AVSEEK_FLAG_ANY      4 <span class="comment">///&lt; seek to any frame, even non-keyframes</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AVSEEK_FLAG_FRAME    8 <span class="comment">///&lt; seeking based on frame number</span></span></span><br><span class="line">  </span><br><span class="line"><span class="comment">//reval: 成功返回&gt;=0</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h1><p>FFmpeg 中结构体很多。最关键的结构体可以分成以下几类：</p>
+<ol>
+<li><p>解协议（http, rtsp, rtmp, mms）<br>AVIOContext，URLProtocol，URLContext 主要存储音视频使用的协议的类型以及状态。URLProtocol 存储输入音视频使用的封装格式。每种协议都对应一个 URLProtocol 结构。（注意：FFmpeg 中文件也被当做一种协议 “file”）</p>
+</li>
+<li><p>解封装（flv, avi, rmvb, mp4）<br>AVFormatContext 主要存储音视频封装格式中包含的信息；AVInputFormat 存储输入音视频使用的封装格式。每种音视频封装格式都对应一个 AVInputFormat 结构。</p>
+</li>
+<li><p>解码（h264, mpeg2, aac, mp3）<br>每个 AVStream 存储一个视频/音频流的相关数据；每个 AVStream 对应一个 AVCodecContext，存储该视频/音频流使用解码方式的相关数据；每个 AVCodecContext 中对应一个 AVCodec，包含该视频/音频对应的解码器。每种解码器都对应一个 AVCodec 结构。</p>
+</li>
+<li><p>存数据<br>视频的话，每个结构一般是存一帧；音频可能有好几帧。解码前数据：AVPacket；解码后数据：AVFrame。</p>
+</li>
+</ol>
+<h2 id="AVFormatContext"><a href="#AVFormatContext" class="headerlink" title="AVFormatContext"></a>AVFormatContext</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">AVIOContext *pb：输入数据的缓存</span><br><span class="line"></span><br><span class="line">unsigned int nb_streams：视音频流的个数</span><br><span class="line"></span><br><span class="line">AVStream **streams：视音频流</span><br><span class="line"></span><br><span class="line">char filename[1024]：文件名</span><br><span class="line"></span><br><span class="line">int64_t duration：时长（单位：微秒us，转换为秒需要除以1000000）</span><br><span class="line"></span><br><span class="line">int bit_rate：比特率（单位bps，转换为kbps需要除以1000）</span><br><span class="line"></span><br><span class="line">AVDictionary *metadata：元数据</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="AVFrame"><a href="#AVFrame" class="headerlink" title="AVFrame"></a>AVFrame</h2><p>AVFrame是包含码流参数较多的结构体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">int8_t *data[AV_NUM_DATA_POINTERS]：解码后原始数据（对视频来说是YUV，RGB，对音频来说是PCM）</span><br><span class="line"></span><br><span class="line">int linesize[AV_NUM_DATA_POINTERS]：data中“一行”数据的大小。注意：未必等于图像的宽，一般大于图像的宽。</span><br><span class="line"></span><br><span class="line">int width, height：视频帧宽和高（1920x1080,1280x720...）</span><br><span class="line"></span><br><span class="line">int format：解码后原始数据类型（YUV420，YUV422，RGB24...）</span><br><span class="line"></span><br><span class="line">int key_frame：是否是关键帧</span><br><span class="line"></span><br><span class="line">enum AVPictureType pict_type：帧类型（I,B,P...）</span><br><span class="line"></span><br><span class="line">AVRational sample_aspect_ratio：宽高比（16:9，4:3...）</span><br><span class="line"></span><br><span class="line">int64_t pts：显示时间戳</span><br><span class="line"></span><br><span class="line">int coded_picture_number：编码帧序号</span><br><span class="line"></span><br><span class="line">int display_picture_number：显示帧序号</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="AVCodecContext"><a href="#AVCodecContext" class="headerlink" title="AVCodecContext"></a>AVCodecContext</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">enum AVMediaType codec_type：编解码器的类型（视频，音频...）</span><br><span class="line"></span><br><span class="line">struct AVCodec  *codec：采用的解码器AVCodec（H.264,MPEG2...）</span><br><span class="line"></span><br><span class="line">int bit_rate：平均比特率</span><br><span class="line"></span><br><span class="line">uint8_t *extradata; int extradata_size：针对特定编码器包含的附加信息（例如对于H.264解码器来说，存储SPS，PPS等）</span><br><span class="line"></span><br><span class="line">AVRational time_base：根据该参数，可以把PTS转化为实际的时间（单位为秒s）</span><br><span class="line"></span><br><span class="line">int width, height：如果是视频的话，代表宽和高</span><br><span class="line"></span><br><span class="line">int refs：运动估计参考帧的个数（H.264的话会有多帧，MPEG2这类的一般就没有了）</span><br><span class="line"></span><br><span class="line">int sample_rate：采样率（音频）</span><br><span class="line"></span><br><span class="line">int channels：声道数（音频）</span><br><span class="line"></span><br><span class="line">enum AVSampleFormat sample_fmt：采样格式</span><br><span class="line"></span><br><span class="line">int profile：型（H.264里面就有，其他编码标准应该也有）</span><br><span class="line"></span><br><span class="line">int level：级（和profile差不太多）</span><br><span class="line"></span><br><span class="line">int has_b_frames：有无b帧，对于mpeg来说若为0：IP；若为1：IPB</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="AVCodec"><a href="#AVCodec" class="headerlink" title="AVCodec"></a>AVCodec</h2><p>存储编解码器信息的结构体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">const char *name：编解码器的名字，比较短</span><br><span class="line"></span><br><span class="line">const char *long_name：编解码器的名字，全称，比较长</span><br><span class="line"></span><br><span class="line">enum AVMediaType type：指明了类型，是视频，音频，还是字幕</span><br><span class="line"></span><br><span class="line">enum AVCodecID id：ID，不重复</span><br><span class="line"></span><br><span class="line">const AVRational *supported_framerates：支持的帧率（仅视频）</span><br><span class="line"></span><br><span class="line">const enum AVPixelFormat *pix_fmts：支持的像素格式（仅视频）</span><br><span class="line"></span><br><span class="line">const int *supported_samplerates：支持的采样率（仅音频）</span><br><span class="line"></span><br><span class="line">const enum AVSampleFormat *sample_fmts：支持的采样格式（仅音频）</span><br><span class="line"></span><br><span class="line">const uint64_t *channel_layouts：支持的声道数（仅音频）</span><br><span class="line"></span><br><span class="line">int priv_data_size：私有数据的大小</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="AVStream"><a href="#AVStream" class="headerlink" title="AVStream"></a>AVStream</h2><p>AVStream是存储每一个视频/音频流信息的结构体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">int index：标识该视频/音频流</span><br><span class="line"></span><br><span class="line">AVCodecContext *codec：指向该视频/音频流的AVCodecContext（它们是一一对应的关系）</span><br><span class="line"></span><br><span class="line">AVRational time_base：时基。通过该值可以把PTS，DTS转化为真正的时间。FFMPEG其他结构体中也有这个字段，但是根据我的经验，只有AVStream中的time_base是可用的。PTS*time_base=真正的时间</span><br><span class="line"></span><br><span class="line">int64_t duration：该视频/音频流长度</span><br><span class="line"></span><br><span class="line">AVDictionary *metadata：元数据信息</span><br><span class="line"></span><br><span class="line">AVRational avg_frame_rate：帧率（注：对视频来说，这个挺重要的）</span><br><span class="line"></span><br><span class="line">AVPacket attached_pic：附带的图片。比如说一些MP3，AAC音频文件附带的专辑封面。</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="AVPacket"><a href="#AVPacket" class="headerlink" title="AVPacket"></a>AVPacket</h2><p>AVPacket是存储压缩编码数据相关信息的结构体</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">uint8_t *data：压缩编码的数据。</span><br><span class="line"></span><br><span class="line">int   size：data的大小</span><br><span class="line"></span><br><span class="line">int64_t pts：显示时间戳</span><br><span class="line"></span><br><span class="line">int64_t dts：解码时间戳</span><br><span class="line"></span><br><span class="line">int   stream_index：标识该AVPacket所属的视频/音频流。</span><br><span class="line"></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h1 id="编解码器常用命令"><a href="#编解码器常用命令" class="headerlink" title="编解码器常用命令"></a>编解码器常用命令</h1><p>FFmpeg 的命令行参数可以分成五个部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ffmpeg &#123;1&#125; &#123;2&#125; -i &#123;3&#125; &#123;4&#125; &#123;5&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分别是：全局参数、输入文件参数、输入文件、输出文件参数、输出文件</p>
+<h2 id="去除b帧"><a href="#去除b帧" class="headerlink" title="去除b帧"></a>去除b帧</h2><p>（仅针对x264解码器）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -i test.mp4 -vcodec libx264 -bf 0 out.mp4</span><br><span class="line">ffmpeg -i test.mp4 -vcodec libx264 -x264opts &quot;bframes=0&quot; out.mp4</span><br></pre></td></tr></table></figure>
+<p>参考：<a target="_blank" rel="noopener" href="https://sites.google.com/site/linuxencoding/x264-ffmpeg-mapping">ffmpeg x264 选项指南</a></p>
+<h2 id="缩放视频"><a href="#缩放视频" class="headerlink" title="缩放视频"></a>缩放视频</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">普通缩放</span></span><br><span class="line">ffmpeg -s 720x1280 -pix_fmt yuv420p -i out.yuv -vcodec libx264 output.mp4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">设置纵横比</span></span><br><span class="line">ffmpeg -i input.mov -vf scale=720x406,setdar=16:9 output.mp4</span><br></pre></td></tr></table></figure>
+
+<h2 id="显示媒体流信息"><a href="#显示媒体流信息" class="headerlink" title="显示媒体流信息"></a>显示媒体流信息</h2><p>ffprobe 是ffmpeg的一个工具包，主要用于探测音视频文件的各种信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看基本信息</span></span><br><span class="line">ffprobe test.mp4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看封装格式</span></span><br><span class="line">ffprobe -show_format test.mp4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">以XML格式显示媒体流信息（选择视频流）</span></span><br><span class="line">ffprobe -show_frames -select_streams v -of xml test.mp4</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">查看视频流的数据包信息 video视频，audio音频，s字幕</span></span><br><span class="line">ffprobe -show_packets -select_streams video test.mp4</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>赞助博主的人类改造计划</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="8Biiit 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="8Biiit 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>8Biiit
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://8biiit.github.io/2021/08/03/FFmpeg/" title="FFmpeg">http://8biiit.github.io/2021/08/03/FFmpeg/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
+              <a href="/tags/media/" rel="tag"># media</a>
+              <a href="/tags/Codec/" rel="tag"># Codec</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/08/01/Hexo-Next%E5%8D%9A%E5%AE%A2%E5%8D%87%E7%BA%A7/" rel="prev" title="Hexo+Next博客升级">
+                  <i class="fa fa-chevron-left"></i> Hexo+Next博客升级
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">8Biiit</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"8biiit","repo":"8biiit.github.io","client_id":"8c5e1f409f422d4e10f6","client_secret":"dd74067b3e311d6338eb117e3711361d6769df41","admin_user":"8biiit","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"264724217ce5148860ecf12706ceec0e"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
