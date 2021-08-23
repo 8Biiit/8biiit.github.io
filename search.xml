@@ -1528,7 +1528,7 @@
 <p>解决办法：</p>
 <p><strong>1. 关闭二次验证</strong></p>
 <blockquote>
-<p>[warning]<br>不建议使用该方法，会降低安全性</p>
+<p>❗<font color="#dd0000" size="4"><strong>WARNING</strong></font><br>不建议使用该方法，会降低安全性</p>
 </blockquote>
 <ul>
 <li>登录github.com</li>
@@ -1537,7 +1537,7 @@
 <li>点击 Disable two-factor authentication</li>
 </ul>
 <blockquote>
-<p>[info]<br>关闭二次验证后，hexo部署提交时使用的密码即为GitHub的用户密码。</p>
+<p>⚠️ <font color="#dddd00" size="4"><strong>INFO</strong></font><br>关闭二次验证后，hexo部署提交时使用的密码即为GitHub的用户密码。</p>
 </blockquote>
 <p><strong>2.生成令牌码，作为密码登录</strong> </p>
 <ul>
@@ -1548,7 +1548,7 @@
 <li>保存</li>
 </ul>
 <blockquote>
-<p>[info]<br>生成令牌码后，hexo部署提交时使用的密码即为该令牌码。</p>
+<p>⚠️ <font color="#dddd00" size="4"><strong>INFO</strong></font><br>生成令牌码后，hexo部署提交时使用的密码即为该令牌码。</p>
 </blockquote>
 ]]></content>
       <categories>

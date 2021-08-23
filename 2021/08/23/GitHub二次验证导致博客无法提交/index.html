@@ -28,7 +28,7 @@
 <meta property="og:description" content="GitHub开启二次验证后会导致博客代码提交的时候提示错误，无法提交至GitHub。原因是根据官方博客密码验证于2021年8月13日不再支持，需使用 personal access token 替代。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-23T07:39:56.000Z">
-<meta property="article:modified_time" content="2021-08-23T07:59:03.751Z">
+<meta property="article:modified_time" content="2021-08-23T08:12:56.886Z">
 <meta property="article:author" content="8Biiit">
 <meta property="article:tag" content="Hexo">
 <meta property="article:tag" content="blog">
@@ -222,7 +222,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-08-23 15:39:56 / 修改时间：15:59:03" itemprop="dateCreated datePublished" datetime="2021-08-23T15:39:56+08:00">2021-08-23</time>
+      <time title="创建时间：2021-08-23 15:39:56 / 修改时间：16:12:56" itemprop="dateCreated datePublished" datetime="2021-08-23T15:39:56+08:00">2021-08-23</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -260,7 +260,7 @@
 <p>解决办法：</p>
 <p><strong>1. 关闭二次验证</strong></p>
 <blockquote>
-<p>[warning]<br>不建议使用该方法，会降低安全性</p>
+<p>❗<font color="#dd0000" size="4"><strong>WARNING</strong></font><br>不建议使用该方法，会降低安全性</p>
 </blockquote>
 <ul>
 <li>登录github.com</li>
@@ -269,7 +269,7 @@
 <li>点击 Disable two-factor authentication</li>
 </ul>
 <blockquote>
-<p>[info]<br>关闭二次验证后，hexo部署提交时使用的密码即为GitHub的用户密码。</p>
+<p>⚠️ <font color="#dddd00" size="4"><strong>INFO</strong></font><br>关闭二次验证后，hexo部署提交时使用的密码即为GitHub的用户密码。</p>
 </blockquote>
 <p><strong>2.生成令牌码，作为密码登录</strong> </p>
 <ul>
@@ -280,7 +280,7 @@
 <li>保存</li>
 </ul>
 <blockquote>
-<p>[info]<br>生成令牌码后，hexo部署提交时使用的密码即为该令牌码。</p>
+<p>⚠️ <font color="#dddd00" size="4"><strong>INFO</strong></font><br>生成令牌码后，hexo部署提交时使用的密码即为该令牌码。</p>
 </blockquote>
 
     </div>
