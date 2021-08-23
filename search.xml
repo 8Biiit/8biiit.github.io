@@ -1525,9 +1525,8 @@
 <p>具体提示如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.</span><br><span class="line">remote: Please see https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/ for more information.</span><br><span class="line">fatal: Authentication failed for &#x27;https://github.com/xxx/xxx.github.io.git/&#x27;</span><br></pre></td></tr></table></figure>
 
-<p>解决办法：</p>
-<p><strong>1. 关闭二次验证</strong></p>
-<blockquote>
+<p><strong>解决办法有如下两种：</strong></p>
+<h1 id="方法1-关闭二次验证"><a href="#方法1-关闭二次验证" class="headerlink" title="方法1. 关闭二次验证"></a>方法1. 关闭二次验证</h1><blockquote>
 <p>❗<font color="#dd0000" size="4"><strong>WARNING</strong></font><br>不建议使用该方法，会降低安全性</p>
 </blockquote>
 <ul>
@@ -1539,8 +1538,7 @@
 <blockquote>
 <p>⚠️ <font color="#dddd00" size="4"><strong>INFO</strong></font><br>关闭二次验证后，hexo部署提交时使用的密码即为GitHub的用户密码。</p>
 </blockquote>
-<p><strong>2.生成令牌码，作为密码登录</strong> </p>
-<ul>
+<h1 id="方法2-生成令牌码，作为密码登录"><a href="#方法2-生成令牌码，作为密码登录" class="headerlink" title="方法2. 生成令牌码，作为密码登录"></a>方法2. 生成令牌码，作为密码登录</h1><ul>
 <li>登录github.com</li>
 <li>进入Settings -&gt; Personal access tokens -&gt; Generate new token</li>
 <li>为令牌添加备注</li>
