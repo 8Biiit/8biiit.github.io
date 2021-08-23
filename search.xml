@@ -1462,4 +1462,48 @@
         <tag>Codec</tag>
       </tags>
   </entry>
+  <entry>
+    <title>某MMO游戏脚本逆向(一)——脱壳</title>
+    <url>/2021/08/23/%E6%9F%90MMO%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E9%80%86%E5%90%911/</url>
+    <content><![CDATA[<p>国内外手游，尤其是MMORPG品类的游戏，经常有一些刷刷刷的日常任务，这也催生了大量游戏辅助脚本。这些脚本一般完成一些简单的pve战斗，或不需要太多机制的pvp玩法。本次将对一个主流手游的脚本进行逆向，观察下脚本的运行逻辑。</p>
+<h1 id="查壳"><a href="#查壳" class="headerlink" title="查壳"></a>查壳</h1><p>首先用ida打开文件，会报错</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">The imports segment seems to be destroyed. This MAY mean that the file was packed or otherwise modified in order to make it more difficult to analyze. If you want to see the imports segment in the original form, please reload it with the &#x27;make imports section&#x27; checkbox cleared.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/08/23/%E6%9F%90MMO%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E9%80%86%E5%90%911/ida.png" alt="ida"></p>
+<p>这个提示出现意味着文件被加壳了，需要进行脱壳处理。</p>
+<p>用ExEinfoPE打开得到的文件，可以看到已经脱壳成功打开，可以看到使用的是Themida壳，<code>Themida &amp; WinLicense 2.0 - 2.4.6 - struct (Hide from PE scanners II-V)</code><br><img src="/2021/08/23/%E6%9F%90MMO%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E9%80%86%E5%90%911/exeinfo.png" alt="ExEinfoPE"></p>
+<h1 id="脱壳"><a href="#脱壳" class="headerlink" title="脱壳"></a>脱壳</h1><p>脱壳方法参考<a href="https://zenhax.com/viewtopic.php?f=4&t=1051">某大神做法</a></p>
+<p>脱壳需要以下工具：</p>
+<ul>
+<li>原版 Ollydbg<br>插件:</li>
+<li>ODBGScript v1.82.6</li>
+<li>StrongOD 0.4.8.892</li>
+<li>PhanOm 1.79</li>
+<li>ARImpRec.dll<br>脱壳脚本:</li>
+<li>(Themida - Winlicense Ultra Unpacker 1.4)</li>
+</ul>
+<p>接下来开始按步骤操作：</p>
+<ol>
+<li><p>设置ARImpRec.dll路径<br>打开<code>Themida - Winlicense Ultra Unpacker 1.4.txt</code>，搜索<code>HERE_ENTER_YOUR_DLL_PATH_TO_ARIMPREC_DLL</code>并将下方代码修改为自己的ARImpRec.dll文件的绝对路径。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">HERE_ENTER_YOUR_DLL_PATH_TO_ARIMPREC_DLL:</span><br><span class="line">mov ARIMPREC_PATH, &quot;C:\xxx\ARImpRec.dll&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>下载并设置打开Ollydbg<br>将 ollydbg 解压缩到目标路径。<br>在 ollydbg 文件夹中创建一个名为 plugin 的文件夹，并将所有插件放入该文件夹<br>从 OllyDBG 的主文件夹中删除 PSAPI.DLL<br>第一次打开Olly需要设置插件目录，菜单进入 Option -&gt; Appareance，在选项卡中设置存储插件的位置，点击确定然后重启<br>打开目标文件，会弹出一个窗口，按是，文件继续分析，等待完成<br>按F9运行，有一个弹出窗口，按确定即可终止调试</p>
+</li>
+<li><p>运行脚本<br>通过plugin menu-ODBGScript-Run Script，选择<code>Themida - Winlicense Ultra Unpacker 1.4.txt</code><br>重新打开目标后再次运行脚本，若弹出要求开始解包过程，选YES<br>下一个选No<br>在运行几秒后，脚本暂停，继续运行脚本即可</p>
+</li>
+<li><p>修改ollydbg.ini<br>随后获得弹窗，提示需要在OllyDBG.ini文件中，根据提示修改文件，并重新运行脚本</p>
+</li>
+<li><p>重新运行脚本<br>重复之前的步骤，打开目标并运行脚本等，完成后我们得到了最后的结果。</p>
+</li>
+</ol>
+<p>再次使用ExEinfoPE打开得到的文件，可以看到已经脱壳成功</p>
+]]></content>
+      <categories>
+        <category>逆向</category>
+      </categories>
+      <tags>
+        <tag>逆向</tag>
+        <tag>PE</tag>
+        <tag>游戏</tag>
+      </tags>
+  </entry>
 </search>
