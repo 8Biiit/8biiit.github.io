@@ -1526,14 +1526,19 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.</span><br><span class="line">remote: Please see https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/ for more information.</span><br><span class="line">fatal: Authentication failed for &#x27;https://github.com/xxx/xxx.github.io.git/&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>解决办法：</p>
-<p><strong>1. 关闭二次验证</strong><br>[warning]<strong>不建议使用该方法，会降低安全性</strong></p>
+<p><strong>1. 关闭二次验证</strong></p>
+<blockquote>
+<p>[warning]<br>不建议使用该方法，会降低安全性</p>
+</blockquote>
 <ul>
 <li>登录github.com</li>
 <li>进入Settings -&gt; Security</li>
 <li>在 Two-factor authentication 栏下点击Edit</li>
 <li>点击 Disable two-factor authentication</li>
 </ul>
-<p>[info]关闭二次验证后，hexo部署提交时使用的密码即为GitHub的用户密码。</p>
+<blockquote>
+<p>[info]<br>关闭二次验证后，hexo部署提交时使用的密码即为GitHub的用户密码。</p>
+</blockquote>
 <p><strong>2.生成令牌码，作为密码登录</strong> </p>
 <ul>
 <li>登录github.com</li>
@@ -1542,7 +1547,9 @@
 <li>勾选该令牌权限</li>
 <li>保存</li>
 </ul>
-<p>[info]生成令牌码后，hexo部署提交时使用的密码即为该令牌码。</p>
+<blockquote>
+<p>[info]<br>生成令牌码后，hexo部署提交时使用的密码即为该令牌码。</p>
+</blockquote>
 ]]></content>
       <categories>
         <category>杂项</category>
