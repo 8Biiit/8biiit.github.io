@@ -1466,6 +1466,8 @@
     <title>某MMO游戏脚本逆向(一)——脱壳</title>
     <url>/2021/08/23/%E6%9F%90MMO%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E9%80%86%E5%90%911/</url>
     <content><![CDATA[<p>国内外手游，尤其是MMORPG品类的游戏，经常有一些刷刷刷的日常任务，这也催生了大量游戏辅助脚本。这些脚本一般完成一些简单的pve战斗，或不需要太多机制的pvp玩法。本次将对一个主流手游的脚本进行逆向，观察下脚本的运行逻辑。</p>
+<span id="more"></span>
+
 <h1 id="查壳"><a href="#查壳" class="headerlink" title="查壳"></a>查壳</h1><p>首先用ida打开文件，会报错</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">The imports segment seems to be destroyed. This MAY mean that the file was packed or otherwise modified in order to make it more difficult to analyze. If you want to see the imports segment in the original form, please reload it with the &#x27;make imports section&#x27; checkbox cleared.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
