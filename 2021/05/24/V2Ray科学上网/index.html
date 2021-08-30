@@ -20,12 +20,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"8biiit.github.io","root":"/","images":"/images","scheme":"Gemini","version":"8.6.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-2}},"activeClass":"gitalk"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="v2Ray服务端配置VMess + WebSocket + TLS可以实现隐蔽的科学上网，本文将从头到尾一站式介绍搭建上网工具的方法。 你需要：  一台自己的VPS 能够解析到自己VPS的域名 VPS部署Nginx服务 域名启用https的SSL安全证书  若满足以上条件，可以直接跳转到步骤：安装和配置V2Ray服务端 注册VPS服务器考虑到稳定性、价格、支付方式等原因，从几大国外VPS服务商里选">
+<meta name="description" content="v2Ray服务端配置VMess + WebSocket + TLS可以实现隐蔽的科学上网，本文将从头到尾一站式介绍搭建上网工具的方法。 你需要：  一台自己的VPS 能够解析到自己VPS的域名 VPS部署Nginx服务 域名启用https的SSL安全证书  若满足以上条件，可以直接跳转到步骤：安装和配置V2Ray服务端">
 <meta property="og:type" content="article">
 <meta property="og:title" content="v2Ray配置VMess + WebSocket + TLS搭建科学上网工具">
 <meta property="og:url" content="http://8biiit.github.io/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/index.html">
 <meta property="og:site_name" content="8Biiit&#39;s Blog">
-<meta property="og:description" content="v2Ray服务端配置VMess + WebSocket + TLS可以实现隐蔽的科学上网，本文将从头到尾一站式介绍搭建上网工具的方法。 你需要：  一台自己的VPS 能够解析到自己VPS的域名 VPS部署Nginx服务 域名启用https的SSL安全证书  若满足以上条件，可以直接跳转到步骤：安装和配置V2Ray服务端 注册VPS服务器考虑到稳定性、价格、支付方式等原因，从几大国外VPS服务商里选">
+<meta property="og:description" content="v2Ray服务端配置VMess + WebSocket + TLS可以实现隐蔽的科学上网，本文将从头到尾一站式介绍搭建上网工具的方法。 你需要：  一台自己的VPS 能够解析到自己VPS的域名 VPS部署Nginx服务 域名启用https的SSL安全证书  若满足以上条件，可以直接跳转到步骤：安装和配置V2Ray服务端">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://8biiit.github.io/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/register.png">
 <meta property="og:image" content="http://8biiit.github.io/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/order.png">
@@ -42,7 +42,7 @@
 <meta property="og:image" content="http://8biiit.github.io/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/ws.png">
 <meta property="og:image" content="http://8biiit.github.io/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/tls.png">
 <meta property="article:published_time" content="2021-05-24T09:21:11.000Z">
-<meta property="article:modified_time" content="2021-08-25T03:51:43.632Z">
+<meta property="article:modified_time" content="2021-05-24T08:24:00.000Z">
 <meta property="article:author" content="8Biiit">
 <meta property="article:tag" content="V2Ray">
 <meta property="article:tag" content="Nginx">
@@ -235,16 +235,10 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2021-05-24 17:21:11" itemprop="dateCreated datePublished" datetime="2021-05-24T17:21:11+08:00">2021-05-24</time>
+      <time title="创建时间：2021-05-24 17:21:11 / 修改时间：16:24:00" itemprop="dateCreated datePublished" datetime="2021-05-24T17:21:11+08:00">2021-05-24</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-08-25 11:51:43" itemprop="dateModified" datetime="2021-08-25T11:51:43+08:00">2021-08-25</time>
-      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -281,6 +275,7 @@
 <li>域名启用https的SSL安全证书</li>
 </ul>
 <p>若满足以上条件，可以直接跳转到步骤：<a href="#%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AEV2Ray%E6%9C%8D%E5%8A%A1%E7%AB%AF">安装和配置V2Ray服务端</a></p>
+<span id="more"></span>
 <h1 id="注册VPS服务器"><a href="#注册VPS服务器" class="headerlink" title="注册VPS服务器"></a>注册VPS服务器</h1><p>考虑到稳定性、价格、支付方式等原因，从几大国外VPS服务商里选择了“搬瓦工”Bandwagon。</p>
 <h2 id="购买VPS套餐"><a href="#购买VPS套餐" class="headerlink" title="购买VPS套餐"></a>购买VPS套餐</h2><p>国内镜像官网：<a target="_blank" rel="noopener" href="https://bwh81.net/">搬瓦工(BandwagonHost)</a>首页进行注册<br><img src="/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/register.png" alt="BandwagonHost"><br>填写完个人信息之后提交，就可以选择不同的方案了。<br><img src="/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/order.png" alt="order"><br>这里我选择的是49.9刀的低配方案：<a target="_blank" rel="noopener" href="https://bwh81.net/cart.php?a=confproduct&i=2">传送门</a><br>进入订单页面后，点击下方”Add to Cart”加入购物车，并进行结算。<br><img src="/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/checkout.jpg" alt="checkout"><br>优惠码可以搜索获取，常年有6%以上的折扣。<br>支付方式可以选择AliPay，确认后使用支付宝进行扫码支付。</p>
 <h2 id="查看VPS信息"><a href="#查看VPS信息" class="headerlink" title="查看VPS信息"></a>查看VPS信息</h2><p>点击网站上方菜单”Client Area”-&gt;”Services”-&gt;”My Services”查看自己的服务<br><img src="/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/service.png" alt="service"><br>点击结果右侧的”KiwiVM Control Panel”进入控制面板<br><img src="/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/record.png" alt="record"><br>左侧菜单选择”Main Controls”，可以看到服务器详细信息，如IP地址和SSH端口号。<br><img src="/2021/05/24/V2Ray%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/menu.png" alt="menu"><br>左侧菜单选择”Install new OS”，重新安装ubuntu20.04(16.04以上即可)。<br>安装成功后，页面会提示新的root密码，是一串随机字符。如果忘记了也没关系，可以在左侧菜单选择”Root password modification”进行重置。</p>
